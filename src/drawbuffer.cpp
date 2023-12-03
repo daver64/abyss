@@ -14,13 +14,15 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
-drawbuffer* create_drawbuffer()
+int32 create_drawbuffer(drawbuffer **db)
 {
-	return new drawbuffer(true,true);
+	(*db) = new drawbuffer(true,true);
+	return 0;
 }
-void destroy_drawbuffer(drawbuffer* db)
+void destroy_drawbuffer(drawbuffer** db)
 {
-	delete db;
+	delete (*db);
+	*db=nullptr;
 }
 void begin_quads(drawbuffer* target)
 {

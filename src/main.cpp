@@ -11,8 +11,10 @@ int main(int argc, char* argv[])
 	enable_multisampling();
 	enable_texture_filtering();
 
-	texture* logo = create_texture("../data/textures/bud.png");
-	drawbuffer* db = create_drawbuffer();
+	texture* logo{nullptr};
+	result = create_texture(&logo,"../data/textures/bud.png");
+	drawbuffer* db{nullptr};
+	result = create_drawbuffer(&db);
 
 	do {
 		process_input(app_context);
@@ -28,8 +30,8 @@ int main(int argc, char* argv[])
 		poll_input(app_context);
 	} while (!want_to_quit(app_context));
 
-	destroy_texture(logo);
-	destroy_drawbuffer(db);
+	destroy_texture(&logo);
+	destroy_drawbuffer(&db);
 	destroy_context(&app_context);
 	return 0;
 }

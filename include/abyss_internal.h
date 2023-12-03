@@ -35,7 +35,8 @@ typedef uint32_t uint32;
 typedef int64_t int64;
 typedef uint64_t uint64;
 typedef uint32_t pixel32;
-
+typedef float float32;
+typedef double float64;
 
 #define argb(a,r,g,b) ( ((uint32)(a)<<24) |		\
 			((((uint32)r)<<24)>>8) |	\
@@ -54,7 +55,14 @@ typedef uint32_t pixel32;
 #define getr_nf(p) (getr(p)/255.0f)
 #define getg_nf(p) (getg(p)/255.0f)
 #define getb_nf(p) (getb(p)/255.0f)
-
+template <typename T, typename U, typename V>
+inline T clamp(T a, U low, V high)
+{
+	T val = a < low ? low : a;
+	return val > high ? high : val;
+}
+void cubic_plot(vec2 startpos, vec2 controlpos1, vec2 endpos, vec2 controlpos2, std::vector<vec2> &plotresult, int32 numsegments);
+void quadratic_plot(vec2 startpos, vec2 controlpos, vec2 endpos, std::vector<vec2> &plotresult, int32 numsegments);
 
 
 namespace x11colours {

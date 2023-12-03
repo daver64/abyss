@@ -53,10 +53,13 @@ endif(MINGW)
 ## Project Build.
 ##
 if(MSVC)
-
 add_executable(abyss
     src/main.cpp
     src/fastnoise.cpp
+    src/texture.cpp
+    src/screen.cpp
+    src/drawbuffer.cpp
+    src/maths.cpp
     src/imgui/imgui.cpp
     src/imgui/imgui_draw.cpp
     src/imgui/imgui_tables.cpp
@@ -71,6 +74,10 @@ if(UNIX)
 add_executable(abyss
     src/main.cpp
     src/fastnoise.cpp
+    src/texture.cpp
+    src/screen.cpp
+    src/drawbuffer.cpp
+    src/maths.cpp
     src/imgui/imgui.cpp
     src/imgui/imgui_draw.cpp
     src/imgui/imgui_tables.cpp

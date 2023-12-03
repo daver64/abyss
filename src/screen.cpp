@@ -1,12 +1,15 @@
-//#define STB_IMAGE_IMPLEMENTATION
+
+#define GLFW_INCLUDE_GLEXT
+#include <GLFW/glfw3.h>
+
 #include "stb_image.h"
 #include "abyss.h"
-
-static void glfw_error_callback(int error, const char *description)
+ 
+static void glfw_error_callback(int32 error, const char *description)
 {
     fprintf(stderr, "Error %d : %s\n", error, description);
 }
-static void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+static void framebuffer_size_callback(GLFWwindow *window, int32 width, int32 height)
 {
     glViewport(0, 0, width, height);
 }
@@ -14,8 +17,8 @@ int32 create_context(context **ctx,const std::string& titletext, int32 width, in
 {
     glfwSetErrorCallback(glfw_error_callback);
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
     GLFWwindow *window = glfwCreateWindow(width, height, titletext.c_str(), nullptr, nullptr);
@@ -27,6 +30,7 @@ int32 create_context(context **ctx,const std::string& titletext, int32 width, in
     }
 
     glfwMakeContextCurrent(window);
+  //  load_gl_extensions();
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSwapInterval(1);

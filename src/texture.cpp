@@ -1,4 +1,15 @@
 
+#ifdef _WIN32
+#include <windows.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include "sl_glext.h"
+#else
+#define GL_GLEXT_PROTOTYPES
+#define GLFW_INCLUDE_GLEXT
+#include <GLFW/glfw3.h>
+#endif
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "abyss.h"

@@ -1,8 +1,5 @@
 #pragma once
 
-#define GL_GLEXT_PROTOTYPES
-#define GLFW_INCLUDE_GLEXT
-#include <GLFW/glfw3.h>
 
 #include <cstdint>
 #include <string>
@@ -150,7 +147,8 @@ void texture_unbind();
 //
 class drawbuffer {
 public:
-	drawbuffer(GLenum primitive = GL_TRIANGLES, GLenum usage = GL_DYNAMIC_DRAW);
+//drawbuffer(GLenum primitive = GL_TRIANGLES, GLenum usage = GL_DYNAMIC_DRAW);
+	drawbuffer(GLenum primitive, GLenum usage);
 	~drawbuffer();
 	void vertex(vec3 v);
 	void vertex(vec2 v);
@@ -251,6 +249,7 @@ public:
 //
 // Screen and IO Handling
 //
+struct GLFWwindow;
 struct context
 {
 	GLFWwindow *window{nullptr};

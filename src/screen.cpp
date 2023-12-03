@@ -4,7 +4,19 @@
 
 #include "stb_image.h"
 #include "abyss.h"
- 
+
+void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z)
+{
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    if (!flip)
+        glOrtho(0, width, height, 0, near_z, far_z);
+    else
+        glOrtho(0, width, 0, height, near_z, far_z);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
 static void glfw_error_callback(int32 error, const char *description)
 {
     fprintf(stderr, "Error %d : %s\n", error, description);
@@ -13,7 +25,7 @@ static void framebuffer_size_callback(GLFWwindow *window, int32 width, int32 hei
 {
     glViewport(0, 0, width, height);
 }
-int32 create_context(context **ctx,const std::string& titletext, int32 width, int32 height, bool fullscreen)
+int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen)
 {
     glfwSetErrorCallback(glfw_error_callback);
     glfwInit();
@@ -30,16 +42,16 @@ int32 create_context(context **ctx,const std::string& titletext, int32 width, in
     }
 
     glfwMakeContextCurrent(window);
-  //  load_gl_extensions();
+    //  load_gl_extensions();
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSwapInterval(1);
-	glEnable(GL_MULTISAMPLE);
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glEnable(GL_MULTISAMPLE);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
-	glShadeModel(GL_SMOOTH);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE);
+    glShadeModel(GL_SMOOTH);
 
     GLFWimage images[2];
     images[0].pixels = stbi_load("../data/textures/bud.png", &images[0].width, &images[0].height, 0, 4);
@@ -101,22 +113,22 @@ void process_input(context *ctx)
 }
 void clear_screen()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void clear_screen(pixel32 colour)
 {
-	const float32 r = getr_nf(colour);
-	const float32 g = getg_nf(colour);
-	const float32 b = getb_nf(colour);
-	const float32 a = geta_nf(colour);
-	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    const float32 r = getr_nf(colour);
+    const float32 g = getg_nf(colour);
+    const float32 b = getb_nf(colour);
+    const float32 a = geta_nf(colour);
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void set_clear_colour(pixel32 colour)
 {
-	const float32 r = getr_nf(colour);
-	const float32 g = getg_nf(colour);
-	const float32 b = getb_nf(colour);
-	const float32 a = geta_nf(colour);
-	glClearColor(r, g, b, a);
+    const float32 r = getr_nf(colour);
+    const float32 g = getg_nf(colour);
+    const float32 b = getb_nf(colour);
+    const float32 a = geta_nf(colour);
+    glClearColor(r, g, b, a);
 }

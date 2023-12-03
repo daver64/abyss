@@ -148,7 +148,7 @@ void texture_unbind();
 class drawbuffer {
 public:
 //drawbuffer(GLenum primitive = GL_TRIANGLES, GLenum usage = GL_DYNAMIC_DRAW);
-	drawbuffer(GLenum primitive, GLenum usage);
+	drawbuffer(bool triangles=true, bool dynamic=true);
 	~drawbuffer();
 	void vertex(vec3 v);
 	void vertex(vec2 v);
@@ -194,6 +194,8 @@ public:
 	void reset();
 	void begin(GLenum type);
 	void end();
+	void begin_triangles();
+	void begin_lines();
 	vec3* vertex_pointer(int32 index);
 	vec3* normal_pointer(int32 index);
 	vec4* colour_pointer(int32 index);
@@ -260,6 +262,7 @@ struct context
 };
 int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen);
 int32 destroy_context(context **ctx);
+void ortho2d(int32 width,int32 height, bool flip, float32 near_z, float32 far_z);
 bool want_to_quit(context *ctx);
 void app_quit(context *ctx);
 void swap(context *ctx);

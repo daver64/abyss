@@ -54,9 +54,17 @@ int32 get_patch(float32 lon, float32 lat, float32* u, float32* v, float32 width,
 	return static_cast<int32>(std::floor(x) + width * std::floor(y));
 }
 
-drawbuffer::drawbuffer(GLenum primitive, GLenum usage) 
-	:primitive(primitive), usage(usage)
+drawbuffer::drawbuffer(bool triangles, bool dynamic) 
 {
+    if(triangles)
+        primitive=GL_TRIANGLES;
+    else 
+        primitive=GL_LINES;
+
+    if(dynamic)
+        usage=GL_DYNAMIC_DRAW;
+    else
+        usage=GL_STATIC_DRAW;
 	current_vertex = vec3{ 0.0f,0.0f,0.0f };
 	current_normal = vec3{ 0.0f,1.0f,0.0f };
 	current_colour = vec4{ 1.0f,1.0f,1.0f,1.0f };
@@ -324,10 +332,7 @@ void drawbuffer::rect(float32 x1, float32 y1, float32 width, float32 height, pix
 	vertex(vec2(x1 , y2 ));
 
 }
-#ifndef PIf
-#define PIf (3.1415926f)
-#endif
-
+ 
 void drawbuffer::circle(float32 x, float32 y, float32 radius, pixel32 ccolour, int32 numsegments)
 {
 	colour(ccolour);
@@ -636,6 +641,14 @@ void drawbuffer::reset()
 void drawbuffer::begin(GLenum type)
 {
 	primitive = type;
+}
+void drawbuffer::begin_triangles()
+{
+    primitive=GL_TRIANGLES;
+}
+void drawbuffer::begin_lines()
+{
+    primitive=GL_LINES;
 }
 
 void drawbuffer::end()

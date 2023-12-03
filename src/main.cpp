@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 	int32 result = create_context(&app_context, "Abyss", 800, 600, false);
 
 	enable_texturing();
-
+	enable_multisampling();
 	enable_texture_filtering();
 	texture* logo = create_texture("../data/textures/bud.png");
 	drawbuffer* db = new drawbuffer;
@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 		clear_screen(x11colours::tomato);
 		ortho2d(800, 600, false, 0.5, 200.0);
 		disable_depthtest();
-		texture_bind(logo);
+		//texture_bind(logo);
 		db->bind_tex0(logo->ref);
 		db->begin_quads();
 		db->rect(100.0f, 100.0f, 128.0f, 128.0f, x11colours::white);

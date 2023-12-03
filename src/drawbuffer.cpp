@@ -80,8 +80,8 @@ drawbuffer::drawbuffer(bool triangles, bool dynamic)
 	tex1_offset = 0;
 	tex2_offset = 0;
 	tex3_offset = 0;
-	offset2d = vec2(0.5f, 0.5f);
-	offset3d=vec3(0.0f,0.0f,0.0f);
+	//offset2d = vec2(0.5f, 0.5f);
+	//offset3d=vec3(0.0f,0.0f,0.0f);
 	vertices.reserve(64000);
 	normals.reserve(64000);
 	colours.reserve(64000);
@@ -310,25 +310,25 @@ void drawbuffer::rect(float32 x1, float32 y1, float32 width, float32 height, pix
 	float32 x2 = x1 + width;
 	float32 y2 = y1 + height;
 
-	texcoord(vec2(0, 0));
+	texcoord(vec2(0.0f, 0.0f));
 	colour(colours[0]);
-	normal(vec3(0, 0, 1));
+	normal(vec3(0.0f, 0.0f, 1.0f));
 	vertex(vec2(x1 , y1 ));
 
-	texcoord(vec2(1, 0));
+	texcoord(vec2(1.0f, 0.0f));
 	colour(colours[1]);
-	normal(vec3(0, 0, 1));
+	normal(vec3(0.0f, 0.0f, 1.0f));
 	vertex(vec2(x2 , y1 ));
 
 
-	texcoord(vec2(1, 1));
+	texcoord(vec2(1.0f, 1.0f));
 	colour(colours[2]);
-	normal(vec3(0, 0, 1));
+	normal(vec3(0.0f, 0.0f, 1.0f));
 	vertex(vec2(x2 , y2 ));
 
-	texcoord(vec2(0, 1));
+	texcoord(vec2(0.0f, 1.0f));
 	colour(colours[3]);
-	normal(vec3(0, 0, 1));
+	normal(vec3(0.0f, 0.0f, 1.0f));
 	vertex(vec2(x1 , y2 ));
 
 }

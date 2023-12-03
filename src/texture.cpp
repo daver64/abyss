@@ -14,6 +14,14 @@
 #include "stb_image.h"
 #include "abyss.h"
 
+void enable_multisampling()
+{
+    glEnable(GL_MULTISAMPLE);
+}
+void disable_multisampling()
+{
+    glDisable(GL_MULTISAMPLE);
+}
 void enable_texturing()
 {
 	glEnable(GL_TEXTURE_2D);
@@ -94,6 +102,10 @@ texture *create_texture(const std::string &filename, const bool mipmapped)
             enable_mipmapping();
         }
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex->width, tex->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex->pixels);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
     }
     return tex;
 }

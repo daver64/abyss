@@ -124,6 +124,8 @@ struct texture
 	int32 height{0};
 };
 
+void enable_multisampling();
+void disable_multisampling();
 void enable_texturing();
 void disable_texturing();
 void enable_arrays();
@@ -245,8 +247,8 @@ public:
 	int32 tex1_glref = 0;
 	int32 tex2_glref = 0;
 	int32 tex3_glref = 0;
-	vec2 offset2d;
-	vec3 offset3d;
+	vec2 offset2d{ 0.0f,0.0f };
+	vec3 offset3d{ 0.0f,0.0f,0.0f };
 	bool vbo_deleted{ false };
 };
 

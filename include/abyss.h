@@ -2,11 +2,15 @@
 
 
 #include <cstdint>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include <xmmintrin.h>
-
+#include <AL/al.h>
+#include <AL/alc.h>
 #define FN_USE_DOUBLES
 #include "fastnoise.h"
 

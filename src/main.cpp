@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	do
 	{
 		process_input(app_context);
-		clear_screen(x11colours::tomato);
+		clear_screen(x11colours::black);
 		ortho2d(800, 600, false, -1.0f, 1.0f);
 		disable_depthtest();
 
@@ -30,9 +30,8 @@ int main(int argc, char *argv[])
 		draw_rectangle(db, 100.0f, 100.0f, 64.0f, 64.0f, x11colours::white);
 		end_quads(db);
 
-		disable_texture_filtering();
-		disable_multisampling();
 		bind_atlas(atlas);
+		disable_texture_filtering();
 		begin_atlas(atlas);
 		int32 index=(int32)'A';
 		draw_atlas_tile(atlas, 200, 100, 32, 32, index, x11colours::white);
@@ -40,6 +39,8 @@ int main(int argc, char *argv[])
 
 		swap(app_context);
 		poll_input(app_context);
+
+
 	} while (!want_to_quit(app_context));
 
 	destroy_atlas(&atlas);

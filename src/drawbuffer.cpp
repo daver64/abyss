@@ -14,7 +14,44 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
+drawbuffer* create_drawbuffer()
+{
+	return new drawbuffer(true,true);
+}
+void destroy_drawbuffer(drawbuffer* db)
+{
+	delete db;
+}
+void begin_quads(drawbuffer* target)
+{
+	target->begin(GL_QUADS);
+}
+void end_quads(drawbuffer* target)
+{
+	target->end();
+}
+void draw_rectangle(drawbuffer* target,
+	float32 x, float32 y,
+	float32 width, float32 height,
+	pixel32 colour)
+{
+	const float32 x2 = x + width;
+	const float32 y2 = y + height;
 
+	target->colour(colour);
+
+	target->texcoord0(vec2(0, 0));
+	target->vertex(vec2(x, y));
+
+	target->texcoord0(vec2(1, 0));
+	target->vertex(vec2(x2, y));
+
+	target->texcoord0(vec2(1, 1));
+	target->vertex(vec2(x2, y2));
+
+	target->texcoord0(vec2(0, 1));
+	target->vertex(vec2(x, y2));
+}
 void enable_arrays()
 
 {

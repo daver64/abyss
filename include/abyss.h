@@ -143,6 +143,7 @@ void destroy_texture(texture *tex);
 void texture_gpu_write(texture *tex);
 void texture_gpu_read(texture *tex);
 void texture_bind(texture *tex);
+
 void texture_unbind();
 
 
@@ -267,6 +268,8 @@ struct context
 };
 int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen);
 int32 destroy_context(context **ctx);
+drawbuffer* create_drawbuffer();
+void destroy_drawbuffer(drawbuffer* db);
 void disable_depthtest();
 void enable_depthtest();
 void ortho2d(int32 width,int32 height, bool flip, float32 near_z, float32 far_z);
@@ -278,3 +281,12 @@ void process_input(context *ctx);
 void clear_screen();
 void clear_screen(pixel32 colour);
 void set_clear_colour(pixel32 colour);
+
+// free form drawing
+void end_quads(drawbuffer* target);
+void begin_quads(drawbuffer* target);
+void draw_rectangle(drawbuffer* target,
+	float32 x, float32 y,
+	float32 width, float32 height,
+	pixel32 colour);
+void bind_texture(drawbuffer* db, texture* tex);

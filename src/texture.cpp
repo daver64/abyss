@@ -128,8 +128,13 @@ void texture_gpu_read(texture *tex)
 	glBindTexture(GL_TEXTURE_2D, tex->ref);
 	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA,type,  tex->pixels);
 }
-void texture_bind(texture *tex)
+void bind_texture(texture *tex)
 {
+    glBindTexture(GL_TEXTURE_2D, tex->ref);
+}
+void bind_texture(drawbuffer* db, texture* tex)
+{
+    db->bind_tex0(tex->ref);
     glBindTexture(GL_TEXTURE_2D, tex->ref);
 }
 void texture_unbind()

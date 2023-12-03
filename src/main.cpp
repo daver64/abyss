@@ -7,16 +7,17 @@ int main(int argc, char *argv[])
     context *app_context{nullptr};
     int32 result=create_context(&app_context,"Abyss", 800,600,false);
 
+    enable_texturing();
     texture *logo=create_texture("../data/textures/bud.png");
     drawbuffer *db=new drawbuffer;
     do {
         process_input(app_context);
         clear_screen(x11colours::tomato);
         ortho2d(800,600,false,0.5,200.0);
-    //    texture_bind(logo);
-       // db->begin_triangles();
-      //  db->rect(100.0f,100.0f,128.0f,128.0f,x11colours::white);
-      //  db->end();
+        texture_bind(logo);
+        db->begin_triangles();
+        db->rect(100.0f,100.0f,128.0f,128.0f,x11colours::white);
+        db->end();
         swap(app_context);
         poll_input(app_context);
     } while(!want_to_quit(app_context));

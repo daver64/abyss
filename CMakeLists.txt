@@ -56,6 +56,7 @@ if(MSVC)
 
 add_executable(abyss
     src/main.cpp
+    src/fastnoise.cpp
     src/imgui/imgui.cpp
     src/imgui/imgui_draw.cpp
     src/imgui/imgui_tables.cpp
@@ -69,6 +70,7 @@ endif(MSVC)
 if(UNIX)
 add_executable(abyss
     src/main.cpp
+    src/fastnoise.cpp
     src/imgui/imgui.cpp
     src/imgui/imgui_draw.cpp
     src/imgui/imgui_tables.cpp

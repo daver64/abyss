@@ -4,7 +4,14 @@
 
 #include "stb_image.h"
 #include "abyss.h"
-
+void enable_depthtest()
+{
+    glEnable(GL_DEPTH_TEST);
+}
+void disable_depthtest()
+{
+    glDisable(GL_DEPTH_TEST);
+}
 void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z)
 {
     glViewport(0, 0, width, height);
@@ -25,6 +32,7 @@ static void framebuffer_size_callback(GLFWwindow *window, int32 width, int32 hei
 {
     glViewport(0, 0, width, height);
 }
+void load_gl_extensions();
 int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen)
 {
     glfwSetErrorCallback(glfw_error_callback);
@@ -42,7 +50,7 @@ int32 create_context(context **ctx, const std::string &titletext, int32 width, i
     }
 
     glfwMakeContextCurrent(window);
-    //  load_gl_extensions();
+    load_gl_extensions();
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSwapInterval(1);

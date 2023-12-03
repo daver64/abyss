@@ -63,7 +63,7 @@ PFNGLGENQUERIES glGenQueries = NULL;
 PFNGLQUERYCOUNTER glQueryCounter = NULL;
 PFNGLGETQUERYOBJECTIV glGetQueryObjectiv = NULL;
 PFNGLGETQUERYOBJECTUI64V glGetQueryObjectui64v = NULL;
-void sl_load_gl_extensions()
+void load_gl_extensions()
 {
 	// manually load OpenGL features windows doesn't provide by default.
 	wglSwapInterval = (PFNGLWGLSWAPINTERVALPROC)wglGetProcAddress("wglSwapIntervalEXT");

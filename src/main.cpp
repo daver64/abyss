@@ -8,8 +8,11 @@ int main(int argc, char *argv[])
     int32 result=create_context(&app_context,"Abyss", 800,600,false);
 
     enable_texturing();
+    disable_depthtest();
+    enable_texture_filtering();
     texture *logo=create_texture("../data/textures/bud.png");
     drawbuffer *db=new drawbuffer;
+   
     do {
         process_input(app_context);
         clear_screen(x11colours::tomato);

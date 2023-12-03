@@ -132,6 +132,8 @@ void enable_texture_clamping();
 void disable_texture_clamping();
 void enable_mipmapping();
 void disable_mipmapping();
+void enable_texture_filtering();
+void disable_texture_filtering();
 texture *create_texture(int32 width, int32 height, const bool mipmapped = true);
 texture *create_texture(const std::string &filename, const bool mipmapped = true);
 void destroy_texture(texture *tex);
@@ -262,6 +264,8 @@ struct context
 };
 int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen);
 int32 destroy_context(context **ctx);
+void disable_depthtest();
+void enable_depthtest();
 void ortho2d(int32 width,int32 height, bool flip, float32 near_z, float32 far_z);
 bool want_to_quit(context *ctx);
 void app_quit(context *ctx);

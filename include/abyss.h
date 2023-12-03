@@ -196,6 +196,7 @@ public:
 	void reset();
 	void begin(GLenum type);
 	void end();
+	void begin_quads();
 	void begin_triangles();
 	void begin_lines();
 	vec3* vertex_pointer(int32 index);

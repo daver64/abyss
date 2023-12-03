@@ -642,6 +642,11 @@ void drawbuffer::begin(GLenum type)
 {
 	primitive = type;
 }
+
+void drawbuffer::begin_quads()
+{
+	primitive = GL_QUADS;
+}
 void drawbuffer::begin_triangles()
 {
     primitive=GL_TRIANGLES;

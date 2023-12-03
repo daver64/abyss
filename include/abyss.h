@@ -139,8 +139,8 @@ int32 create_atlas(textureatlas **atlas,drawbuffer *target,const std::string& fi
 int32 destroy_atlas(textureatlas **atlas);
 void bind_atlas(textureatlas *atlas);
 void begin_atlas(textureatlas *atlas);
-void draw_atlastile(textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
-void draw_atlastile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
+void draw_atlas_tile(textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
+void draw_atlas_tile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
 void end_atlas(textureatlas *atlas);
 
 void enable_multisampling();

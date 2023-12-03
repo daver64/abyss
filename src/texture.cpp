@@ -147,7 +147,7 @@ int32 create_atlas(textureatlas **atlas,drawbuffer *target,const std::string& fi
     (*atlas)->numtiles_x=numx;
     (*atlas)->numtiles_y=numy;
     (*atlas)->target = target;
-    int32 result = create_texture(&(*atlas)->tex,filename);
+    int32 result = create_texture(&(*atlas)->tex,filename,true);
     (*atlas)->tile_height=(*atlas)->tex->height/numy;
     (*atlas)->tile_width=(*atlas)->tex->width/numx;
     return result;
@@ -167,7 +167,7 @@ void begin_atlas(textureatlas *atlas)
 {
     atlas->target->begin(GL_QUADS);
 }
-void draw_atlastile(textureatlas *atlas, float_t x1, float_t y1, float_t width,
+void draw_atlas_tile(textureatlas *atlas, float_t x1, float_t y1, float_t width,
                     float_t height, int32 index, pixel32 colour)
 {
     drawbuffer *target=atlas->target;
@@ -203,9 +203,9 @@ void draw_atlastile(textureatlas *atlas, float_t x1, float_t y1, float_t width,
 	target->texcoord0(vec2(u1, v2));
 	target->vertex(vec2(x1, y2));
 }
-void draw_atlastile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour)
+void draw_atlas_tile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour)
 {
-    draw_atlastile(atlas,(float32)x1,(float32)y1,(float32)width,(float32)height,index,colour);
+    draw_atlas_tile(atlas,(float32)x1,(float32)y1,(float32)width,(float32)height,index,colour);
 }
 void end_atlas(textureatlas *atlas)
 {

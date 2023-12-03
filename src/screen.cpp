@@ -50,7 +50,9 @@ int32 create_context(context **ctx, const std::string &titletext, int32 width, i
     }
 
     glfwMakeContextCurrent(window);
+    #ifdef _WIN32
     load_gl_extensions();
+    #endif
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSwapInterval(1);

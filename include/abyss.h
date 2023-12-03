@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <cstdint>
 #include <string>
 #include <cassert>
@@ -36,10 +35,10 @@ inline float32 degtorad(float32 val) { return val * 0.0174532925f; }
 inline float64 radtodeg(float64 val) { return val * 57.2957795; }
 inline float32 radtodeg(float32 val) { return val * 57.2957795f; }
 bool get_line_intersection(float32 p0_x, float32 p0_y,
-                           float32 p1_x, float32 p1_y,
-                           float32 p2_x, float32 p2_y,
-                           float32 p3_x, float32 p3_y,
-                           float32 &i_x, float32 &i_y);
+						   float32 p1_x, float32 p1_y,
+						   float32 p2_x, float32 p2_y,
+						   float32 p3_x, float32 p3_y,
+						   float32 &i_x, float32 &i_y);
 vec2 get_line_intersection(vec2 v0, vec2 v1, vec2 v2, vec2 v3, bool &success);
 enum EIntersectionRelation3D
 {
@@ -92,19 +91,19 @@ public:
 		return ISREL3D_PLANAR;
 	}
 	void set_plane(
-		const vec3& point1, const vec3& point2, const vec3& point3)
+		const vec3 &point1, const vec3 &point2, const vec3 &point3)
 	{
-		//normal = (point2 - point1).cross(point3 - point1);
-		normal = glm::cross( (point2-point1), (point3 - point1));
-		//normal.normalise();
+		// normal = (point2 - point1).cross(point3 - point1);
+		normal = glm::cross((point2 - point1), (point3 - point1));
+		// normal.normalise();
 		glm::normalize(normal);
 		recalculate(point1);
 	}
 	void recalculate(const vec3 &point)
 	{
-		//D = -point.dot(normal);
-		D = glm::dot(point,normal);
-	}	
+		// D = -point.dot(normal);
+		D = glm::dot(point, normal);
+	}
 	vec3 normal;
 	float32 D;
 };
@@ -123,6 +122,26 @@ struct texture
 	int32 width{0};
 	int32 height{0};
 };
+class drawbuffer;
+struct textureatlas
+{
+public:
+	//textureatlas(drawbuffer *target, const char *filename, int32 numtiles_x, int32 numtiles_y, bool clamped, bool mipmapped);
+	//~textureatlas();
+	texture *tex{nullptr};
+	drawbuffer *target{nullptr};
+	int32 tile_width{0};
+	int32 tile_height{0};
+	int32 numtiles_x{0};
+	int32 numtiles_y{0};
+};
+int32 create_atlas(textureatlas **atlas,drawbuffer *target,const std::string& filename,int32 numx,int32 numy);
+int32 destroy_atlas(textureatlas **atlas);
+void bind_atlas(textureatlas *atlas);
+void begin_atlas(textureatlas *atlas);
+void draw_atlastile(textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
+void draw_atlastile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
+void end_atlas(textureatlas *atlas);
 
 void enable_multisampling();
 void disable_multisampling();
@@ -136,8 +155,8 @@ void enable_mipmapping();
 void disable_mipmapping();
 void enable_texture_filtering();
 void disable_texture_filtering();
-int32 create_texture(texture **tex,int32 width, int32 height, const bool mipmapped = true);
-int32 create_texture(texture **tex,const std::string &filename, const bool mipmapped = true);
+int32 create_texture(texture **tex, int32 width, int32 height, const bool mipmapped = true);
+int32 create_texture(texture **tex, const std::string &filename, const bool mipmapped = true);
 void destroy_texture(texture **tex);
 
 void texture_gpu_write(texture *tex);
@@ -146,14 +165,14 @@ void texture_bind(texture *tex);
 
 void texture_unbind();
 
-
 //
 // Drawing Primitives
 //
-class drawbuffer {
+class drawbuffer
+{
 public:
-//drawbuffer(GLenum primitive = GL_TRIANGLES, GLenum usage = GL_DYNAMIC_DRAW);
-	drawbuffer(bool triangles=true, bool dynamic=true);
+	// drawbuffer(GLenum primitive = GL_TRIANGLES, GLenum usage = GL_DYNAMIC_DRAW);
+	drawbuffer(bool triangles = true, bool dynamic = true);
 	~drawbuffer();
 	void vertex(vec3 v);
 	void vertex(vec2 v);
@@ -173,10 +192,10 @@ public:
 	const vec3 get_vertex(int32 index);
 	vec2 get_vertex2(int32 index);
 	vec3 get_normal(int32 index);
-	vec2 get_texcoord(int32 index, int32 texture_index=0);
+	vec2 get_texcoord(int32 index, int32 texture_index = 0);
 	void colour(pixel32 c);
 	void colour(float32 r, float32 g, float32 b, float32 a);
-	//void colour(RGBAf c);
+	// void colour(RGBAf c);
 	void point(float32 x1, float32 y1, pixel32 colour);
 	void line(float32 x1, float32 y1, float32 x2, float32 y2, pixel32 colour);
 	void line(float32 x1, float32 y1, float32 x2, float32 y2, pixel32 colours[2]);
@@ -188,11 +207,11 @@ public:
 	void quad(vec3 p1, vec3 p2, vec3 p3, vec3 p4);
 	void quadratic_bezier(vec2 startpos, vec2 controlpos, vec2 endpos, int32_t numseg);
 	void draw_sphere_patch(float32 slon, float32 slat,
-		float32 elon, float32 elat,
-		int subdivide, int ysubdivide,
-		float32 radius, float32 texture_width, float32 texture_height);
+						   float32 elon, float32 elat,
+						   int subdivide, int ysubdivide,
+						   float32 radius, float32 texture_width, float32 texture_height);
 	void sphere(float32 radius, float32 texture_width, float32 texture_height);
-	//std::vector<Line3<float32> > get_lines();
+	// std::vector<Line3<float32> > get_lines();
 	void alphasort();
 	void build();
 	void draw();
@@ -202,13 +221,13 @@ public:
 	void begin_quads();
 	void begin_triangles();
 	void begin_lines();
-	vec3* vertex_pointer(int32 index);
-	vec3* normal_pointer(int32 index);
-	vec4* colour_pointer(int32 index);
-	vec2* texcoord0_pointer(int32 index);
-	vec2* texcoord1_pointer(int32 index);
-	vec2* texcoord2_pointer(int32 index);
-	vec2* texcoord3_pointer(int32 index);
+	vec3 *vertex_pointer(int32 index);
+	vec3 *normal_pointer(int32 index);
+	vec4 *colour_pointer(int32 index);
+	vec2 *texcoord0_pointer(int32 index);
+	vec2 *texcoord1_pointer(int32 index);
+	vec2 *texcoord2_pointer(int32 index);
+	vec2 *texcoord3_pointer(int32 index);
 	void set_active_texture_unit(int32 unit);
 	int32 get_active_texture_unit();
 	void bind_tex0(int32 gl) { tex0_glref = gl; }
@@ -243,16 +262,14 @@ public:
 	std::vector<vec2> vtexcoord2;
 	std::vector<vec2> vtexcoord3;
 
-
 	int32 tex0_glref = 0;
 	int32 tex1_glref = 0;
 	int32 tex2_glref = 0;
 	int32 tex3_glref = 0;
-	vec2 offset2d{ 0.0f,0.0f };
-	vec3 offset3d{ 0.0f,0.0f,0.0f };
-	bool vbo_deleted{ false };
+	vec2 offset2d{0.0f, 0.0f};
+	vec3 offset3d{0.0f, 0.0f, 0.0f};
+	bool vbo_deleted{false};
 };
-
 
 //
 // Screen and IO Handling
@@ -272,7 +289,7 @@ int32 create_drawbuffer(drawbuffer **db);
 void destroy_drawbuffer(drawbuffer **db);
 void disable_depthtest();
 void enable_depthtest();
-void ortho2d(int32 width,int32 height, bool flip, float32 near_z, float32 far_z);
+void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z);
 bool want_to_quit(context *ctx);
 void app_quit(context *ctx);
 void swap(context *ctx);
@@ -283,10 +300,10 @@ void clear_screen(pixel32 colour);
 void set_clear_colour(pixel32 colour);
 
 // free form drawing
-void end_quads(drawbuffer* target);
-void begin_quads(drawbuffer* target);
-void draw_rectangle(drawbuffer* target,
-	float32 x, float32 y,
-	float32 width, float32 height,
-	pixel32 colour);
-void bind_texture(drawbuffer* db, texture* tex);
+void end_quads(drawbuffer *target);
+void begin_quads(drawbuffer *target);
+void draw_rectangle(drawbuffer *target,
+					float32 x, float32 y,
+					float32 width, float32 height,
+					pixel32 colour);
+void bind_texture(drawbuffer *db, texture *tex);

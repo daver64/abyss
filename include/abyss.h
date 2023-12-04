@@ -6,7 +6,10 @@
 #include <vector>
 
 #include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include "glm/gtx/quaternion.hpp"
 #include <xmmintrin.h>
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -108,6 +111,32 @@ public:
 	float32 D;
 };
 
+class camera
+{
+public:
+	void set_clip(float32 near,float32 far);
+	void zoom_out(float32 angle);
+	void zoom_in(float32 angle);
+	void roll(float32 angle);
+	void yaw(float32 angle);
+	void pitch(float32 angle);
+	void move(const vec3& direction);
+	void set_position(const vec3& newposition);
+	mat4x4 view() const;
+	mat4x4 projection(float32 aspectratio) const;
+	vec3 down_vector() const;
+	vec3 up_vector() const;
+	vec3 right_vector() const;
+	vec3 left_vector() const;
+	vec3 forward_vector() const;
+	vec3 back_vector() const;
+
+	vec3 position{0.0f,0.0f,5.0f};
+	quat rotation{1.0f,0.0f,0.0f,0.0f};
+	float32 fov{glm::radians(60.0f)};
+	float32 znear{0.1f};
+	float32 zfar{100.0f};
+};
 //
 // Platform API
 //
@@ -126,8 +155,6 @@ class drawbuffer;
 struct textureatlas
 {
 public:
-	//textureatlas(drawbuffer *target, const char *filename, int32 numtiles_x, int32 numtiles_y, bool clamped, bool mipmapped);
-	//~textureatlas();
 	texture *tex{nullptr};
 	drawbuffer *target{nullptr};
 	int32 tile_width{0};
@@ -135,7 +162,8 @@ public:
 	int32 numtiles_x{0};
 	int32 numtiles_y{0};
 };
-int32 create_atlas(textureatlas **atlas,drawbuffer *target,const std::string& filename,int32 numx,int32 numy);
+
+int32 create_atlas(textureatlas **atlas, drawbuffer *target, const std::string &filename, int32 numx, int32 numy);
 int32 destroy_atlas(textureatlas **atlas);
 void bind_atlas(textureatlas *atlas);
 void begin_atlas(textureatlas *atlas);

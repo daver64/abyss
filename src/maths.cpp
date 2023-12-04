@@ -1,5 +1,6 @@
 #include "abyss.h"
 
+
 const float64 PI = 3.14159265358979323846264338327950288;
 const float64 TAU = 2.0 * PI;
 const float64 PIDIV2 = PI / 2.0;
@@ -10,6 +11,33 @@ const float32 TAUf = 2.0f * PIf;
 const float32 PIDIV2f = PIf / 2.0f;
 float32 ROUNDING_ERRORf = std::numeric_limits<float32>::epsilon();
 
+vec3 camera::forward_vector() const
+{
+    return glm::rotate(rotation,(vec3(0.0f,0.0f,-1.0f)));
+}
+
+vec3 camera::back_vector() const
+{
+    return -glm::rotate(rotation, (vec3(0.0f,0.0f,-1.0f)));
+}
+
+vec3 camera::up_vector() const
+{
+    return glm::rotate(rotation, (vec3(0.0f,1.0f,0.0f)));
+}
+
+vec3 camera::down_vector() const
+{
+    return glm::rotate(rotation, (-vec3(0.0f,1.0f,0.0f)));   
+}
+vec3 camera::left_vector() const
+{
+    return glm::rotate(rotation,(vec3(1.0f,0.0f,0.0f)));
+}
+vec3 camera::right_vector() const
+{
+    return glm::rotate(rotation,(-vec3(1.0f,0.0f,0.0f)));
+}
 polar::polar(const float32 &lon,
              const float32 &lat,
              const float32 &alt) : lon(lon), lat(lat), alt(alt) {}

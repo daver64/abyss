@@ -305,7 +305,6 @@ struct framebuffer
 	uint32 render_id{0};
 	uint32 depth_id{0};
 	bool valid{false};
-	GLenum format{0};
 };
 //
 // Screen and IO Handling

@@ -17,8 +17,7 @@ int main(int argc, char *argv[])
 	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
 
 	do
-	{
-		
+	{	
 		process_input(app_context);
 		clear_screen(x11colours::black);
 		ortho2d(800, 600, false, -1.0f, 1.0f);
@@ -26,10 +25,10 @@ int main(int argc, char *argv[])
 
 		bind_texture(db, logo);
 		begin_quads(db);
-		draw_rectangle(db, 100.0f, 100.0f, 64.0f, 64.0f, x11colours::white);
+		draw_rectangle(db, 10.0f, 10.0f, 64.0f, 64.0f, x11colours::white);
 		end_quads(db);
 
-		textout(atlas,"Hello world!",20,20);
+		textout(atlas,"Hello world!",100,52);
 
 		swap(app_context);
 

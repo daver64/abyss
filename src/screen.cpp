@@ -149,7 +149,7 @@ void textout(textureatlas *atlas, const char *text, int32 x, int32 y)
 	int32 len = (int32)strlen(text);
 	int32 endx = x + len * atlas->tile_width;
 	const char *ptr = text;
-	int32 xpos=x*atlas->tile_width;
+	int32 xpos=x;//*atlas->tile_width;
 	bind_atlas(atlas);
 	begin_atlas(atlas);
 	for (int32 i = 0; i < len; i++)

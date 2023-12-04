@@ -29,18 +29,23 @@ vec3 camera::down_vector() const
 {
     return glm::rotate(rotation, (-vec3(0.0f, 1.0f, 0.0f)));
 }
+
 vec3 camera::left_vector() const
 {
     return glm::rotate(rotation, (vec3(1.0f, 0.0f, 0.0f)));
 }
+
 vec3 camera::right_vector() const
 {
     return glm::rotate(rotation, (-vec3(1.0f, 0.0f, 0.0f)));
 }
+
 polar::polar(const float32 &lon,
              const float32 &lat,
              const float32 &alt) : lon(lon), lat(lat), alt(alt) {}
+
 polar::polar(const float32 p[3]) : lon(p[0]), lat(p[1]), alt(p[0]) {}
+
 polar::polar(const vec3 &pos)
 {
     rad = std::sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z);
@@ -51,16 +56,19 @@ float32 &polar::operator[](size_t index)
 {
     return d[index];
 }
+
 vec3 polar::polar_to_cartesian(const polar &pos)
 {
     return vec3(std::cos(pos.lon) * std::cos(pos.lat) * pos.rad,
                 std::sin(pos.lon) * std::cos(pos.lat) * pos.rad,
                 std::sin(pos.lat) * pos.rad);
 }
+
 polar polar::cartesian_to_polar(const vec3 &pos)
 {
     return polar(pos);
 }
+
 vec3 polar::to_cartesian()
 {
     return polar_to_cartesian(*this);
@@ -75,6 +83,7 @@ plane::plane()
 {
     normal = vec3(0, 1, 0);
 }
+
 plane::~plane()
 {
 }

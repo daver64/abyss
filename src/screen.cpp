@@ -4,14 +4,7 @@
 #include <cstring>
 #include "stb_image.h"
 #include "abyss.h"
-void enable_depthtest()
-{
-    glEnable(GL_DEPTH_TEST);
-}
-void disable_depthtest()
-{
-    glDisable(GL_DEPTH_TEST);
-}
+
 void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z)
 {
     glViewport(0, 0, width, height);
@@ -24,15 +17,17 @@ void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
+
 static void glfw_error_callback(int32 error, const char *description)
 {
     fprintf(stderr, "Error %d : %s\n", error, description);
 }
+
 static void framebuffer_size_callback(GLFWwindow *window, int32 width, int32 height)
 {
     glViewport(0, 0, width, height);
 }
-void load_gl_extensions();
+
 int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen)
 {
     glfwSetErrorCallback(glfw_error_callback);
@@ -79,6 +74,7 @@ int32 create_context(context **ctx, const std::string &titletext, int32 width, i
     (*ctx)->quit_requested = false;
     return 0;
 }
+
 int32 destroy_context(context **ctx)
 {
     assert(*ctx);
@@ -104,6 +100,7 @@ void swap(context *ctx)
 {
     glfwSwapBuffers(ctx->window);
 }
+
 void poll_input(context *ctx)
 {
     glfwPollEvents();
@@ -122,10 +119,12 @@ void process_input(context *ctx)
         glfwSetWindowShouldClose(ctx->window, true);
     }
 }
+
 void clear_screen()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
 void clear_screen(pixel32 colour)
 {
     const float32 r = getr_nf(colour);
@@ -134,14 +133,6 @@ void clear_screen(pixel32 colour)
     const float32 a = geta_nf(colour);
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-void set_clear_colour(pixel32 colour)
-{
-    const float32 r = getr_nf(colour);
-    const float32 g = getg_nf(colour);
-    const float32 b = getb_nf(colour);
-    const float32 a = geta_nf(colour);
-    glClearColor(r, g, b, a);
 }
 
 void textout(textureatlas *atlas, const char *text, int32 x, int32 y)

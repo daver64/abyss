@@ -19,10 +19,11 @@ int main(int argc, char *argv[])
 	do
 	{	
 		process_input(app_context);
+
 		clear_screen(x11colours::black);
 		ortho2d(800, 600, false, -1.0f, 1.0f);
 		disable_depthtest();
-
+		
 		bind_texture(db, logo);
 		begin_quads(db);
 		draw_rectangle(db, 10.0f, 10.0f, 64.0f, 64.0f, x11colours::white);

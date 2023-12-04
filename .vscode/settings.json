@@ -3,6 +3,7 @@
     "files.associations": {
         "xstring": "cpp",
         "xiosbase": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "algorithm": "cpp"
     }
 }

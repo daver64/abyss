@@ -55,22 +55,6 @@ void draw_rectangle(drawbuffer *target,
 	target->texcoord0(vec2(0, 1));
 	target->vertex(vec2(x, y2));
 }
-void enable_arrays()
-
-{
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-}
-
-void disable_arrays()
-{
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-}
 
 int32 get_patch(float32 lon, float32 lat, float32 *u, float32 *v, float32 width, float32 height)
 {

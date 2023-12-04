@@ -14,6 +14,7 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #ifdef _WIN32
+void load_gl_extensions();
 #include "resource.h"
 #endif
 

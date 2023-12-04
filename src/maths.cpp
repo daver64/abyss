@@ -1,6 +1,5 @@
 #include "abyss.h"
 
-
 const float64 PI = 3.14159265358979323846264338327950288;
 const float64 TAU = 2.0 * PI;
 const float64 PIDIV2 = PI / 2.0;
@@ -13,30 +12,30 @@ float32 ROUNDING_ERRORf = std::numeric_limits<float32>::epsilon();
 
 vec3 camera::forward_vector() const
 {
-    return glm::rotate(rotation,(vec3(0.0f,0.0f,-1.0f)));
+    return glm::rotate(rotation, (vec3(0.0f, 0.0f, -1.0f)));
 }
 
 vec3 camera::back_vector() const
 {
-    return -glm::rotate(rotation, (vec3(0.0f,0.0f,-1.0f)));
+    return -glm::rotate(rotation, (vec3(0.0f, 0.0f, -1.0f)));
 }
 
 vec3 camera::up_vector() const
 {
-    return glm::rotate(rotation, (vec3(0.0f,1.0f,0.0f)));
+    return glm::rotate(rotation, (vec3(0.0f, 1.0f, 0.0f)));
 }
 
 vec3 camera::down_vector() const
 {
-    return glm::rotate(rotation, (-vec3(0.0f,1.0f,0.0f)));   
+    return glm::rotate(rotation, (-vec3(0.0f, 1.0f, 0.0f)));
 }
 vec3 camera::left_vector() const
 {
-    return glm::rotate(rotation,(vec3(1.0f,0.0f,0.0f)));
+    return glm::rotate(rotation, (vec3(1.0f, 0.0f, 0.0f)));
 }
 vec3 camera::right_vector() const
 {
-    return glm::rotate(rotation,(-vec3(1.0f,0.0f,0.0f)));
+    return glm::rotate(rotation, (-vec3(1.0f, 0.0f, 0.0f)));
 }
 polar::polar(const float32 &lon,
              const float32 &lat,
@@ -108,7 +107,6 @@ void cubic_plot(vec2 startpos, vec2 controlpos1, vec2 endpos, vec2 controlpos2, 
         plotresult.emplace_back(vec2((float_t)x, (float_t)y));
     }
 }
-
 
 vec2 get_line_intersection(vec2 v0, vec2 v1, vec2 v2, vec2 v3, bool &success)
 {

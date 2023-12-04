@@ -154,7 +154,6 @@ struct texture
 class drawbuffer;
 struct textureatlas
 {
-public:
 	texture *tex{nullptr};
 	drawbuffer *target{nullptr};
 	int32 tile_width{0};
@@ -183,9 +182,7 @@ void enable_mipmapping();
 void disable_mipmapping();
 void enable_texture_filtering();
 void disable_texture_filtering();
-int32 create_texture(texture **tex, int32 width, int32 height, const bool mipmapped = true);
-int32 create_texture(texture **tex, const std::string &filename, const bool mipmapped = true);
-void destroy_texture(texture **tex);
+
 
 void texture_gpu_write(texture *tex);
 void texture_gpu_read(texture *tex);
@@ -299,6 +296,17 @@ public:
 	bool vbo_deleted{false};
 };
 
+struct framebuffer
+{
+	int32 width{0};
+	int32 height{0};
+	uint32 glref{0};
+	uint32 frame_id{0};
+	uint32 render_id{0};
+	uint32 depth_id{0};
+	bool valid{false};
+	GLenum format{0};
+};
 //
 // Screen and IO Handling
 //
@@ -311,10 +319,28 @@ struct context
 	bool fullscreen;
 	bool quit_requested;
 };
+
+// context
 int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen);
 int32 destroy_context(context **ctx);
+
+// texture
+int32 create_texture(texture **tex, int32 width, int32 height, const bool mipmapped = true);
+int32 create_texture(texture **tex, const std::string &filename, const bool mipmapped = true);
+void destroy_texture(texture **tex);
+
+// drawbuffer
 int32 create_drawbuffer(drawbuffer **db);
 void destroy_drawbuffer(drawbuffer **db);
+
+// framebuffer
+int32 create_framebuffer(framebuffer **fb, int32 width, int32 height);
+void destroy_framebuffer(framebuffer **fb);
+void bind_framebuffer(framebuffer *fb);
+void unbind_framebuffer(framebuffer *fb);
+
+
+
 void disable_depthtest();
 void enable_depthtest();
 void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z);

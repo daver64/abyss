@@ -115,6 +115,7 @@ void poll_input(context *ctx)
 
 void process_input(context *ctx)
 {
+    poll_input(ctx);
     if (glfwGetKey(ctx->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         app_quit(ctx);

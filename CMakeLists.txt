@@ -60,6 +60,7 @@ add_executable(abyss
     src/texture.cpp
     src/screen.cpp
     src/drawbuffer.cpp
+    src/framebuffer.cpp
     src/maths.cpp
     src/imgui/imgui.cpp
     src/imgui/imgui_draw.cpp
@@ -78,6 +79,7 @@ add_executable(abyss
     src/texture.cpp
     src/screen.cpp
     src/drawbuffer.cpp
+    src/framebuffer.cpp
     src/maths.cpp
     src/imgui/imgui.cpp
     src/imgui/imgui_draw.cpp

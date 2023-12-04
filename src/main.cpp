@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
 	do
 	{
-		poll_input(app_context);
+		
 		process_input(app_context);
 		clear_screen(x11colours::black);
 		ortho2d(800, 600, false, -1.0f, 1.0f);
@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
 		end_quads(db);
 
 		textout(atlas,"Hello world!",20,20);
-
 
 		swap(app_context);
 

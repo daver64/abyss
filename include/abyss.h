@@ -335,3 +335,4 @@ void draw_rectangle(drawbuffer *target,
 					float32 width, float32 height,
 					pixel32 colour);
 void bind_texture(drawbuffer *db, texture *tex);
+void textout(textureatlas *atlas, const char *text, int32 x, int32 y);

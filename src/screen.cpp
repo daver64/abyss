@@ -38,7 +38,7 @@ int32 create_context(context **ctx, const std::string &titletext, int32 width, i
     glfwSetErrorCallback(glfw_error_callback);
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
     GLFWwindow *window = glfwCreateWindow(width, height, titletext.c_str(), nullptr, nullptr);
@@ -141,4 +141,21 @@ void set_clear_colour(pixel32 colour)
     const float32 b = getb_nf(colour);
     const float32 a = geta_nf(colour);
     glClearColor(r, g, b, a);
+}
+
+void textout(textureatlas *atlas, const char *text, int32 x, int32 y)
+{
+	int32 len = (int32)strlen(text);
+	int32 endx = x + len * atlas->tile_width;
+	const char *ptr = text;
+	int32 xpos=x*atlas->tile_width;
+	bind_atlas(atlas);
+	begin_atlas(atlas);
+	for (int32 i = 0; i < len; i++)
+	{
+		int32 index = (int32)text[i];
+		draw_atlas_tile(atlas,xpos,y,atlas->tile_width,atlas->tile_height,index,x11colours::white);
+		xpos+=atlas->tile_width;
+	}
+	end_atlas(atlas);
 }

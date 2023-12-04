@@ -83,13 +83,13 @@ void quadratic_plot(vec2 startpos, vec2 controlpos, vec2 endpos, std::vector<vec
 {
     for (int32 i = 0; i <= numsegments; ++i)
     {
-        const float32 t = (float64)i / (float64)numsegments;
+        const float32 t = (float32)i / (float32)numsegments;
         const float32 a = std::pow((1.0 - t), 2.0);
         const float32 b = 2.0 * t * (1.0 - t);
         const float32 c = std::pow((float32)t, 2.0);
         const float32 x = a * startpos.x + b * controlpos.x + c * endpos.x;
         const float32 y = a * startpos.y + b * controlpos.y + c * endpos.y;
-        plotresult.emplace_back(vec2((float32)x, (float32)y));
+        plotresult.emplace_back(vec2(x,y));
     }
 }
 
@@ -104,7 +104,7 @@ void cubic_plot(vec2 startpos, vec2 controlpos1, vec2 endpos, vec2 controlpos2, 
         const float32 d = powf(t, 3.0f);
         const float32 x = a * startpos.x + b * controlpos1.x + d * endpos.x + c * controlpos2.x;
         const float32 y = a * startpos.y + b * controlpos1.y + d * endpos.y + c * controlpos2.y;
-        plotresult.emplace_back(vec2((float_t)x, (float_t)y));
+        plotresult.emplace_back(vec2(x, y));
     }
 }
 

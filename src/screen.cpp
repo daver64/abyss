@@ -27,16 +27,31 @@ static void framebuffer_size_callback(GLFWwindow *window, int32 width, int32 hei
 {
     glViewport(0, 0, width, height);
 }
-
-int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen)
+void make_current(context *ctx)
 {
+    glfwMakeContextCurrent(ctx->window);
+}
+int32 create_context(context **ctx, const std::string &titletext)
+{
+
     glfwSetErrorCallback(glfw_error_callback);
     glfwInit();
+
+    *ctx = new context;
+    (*ctx)->fullscreen = true;
+    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+    (*ctx)->width = mode->width;
+    (*ctx)->height = mode->height;
+    (*ctx)->quit_requested = false;
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-    GLFWwindow *window = glfwCreateWindow(width, height, titletext.c_str(), nullptr, nullptr);
+
+    GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, titletext.c_str(), monitor, nullptr);
+    (*ctx)->window = window;
     if (!window)
     {
         fprintf(stderr, "failed to create window\n");
@@ -45,10 +60,10 @@ int32 create_context(context **ctx, const std::string &titletext, int32 width, i
     }
 
     glfwMakeContextCurrent(window);
-    #ifdef _WIN32
+#ifdef _WIN32
     load_gl_extensions();
-    #endif
-    glViewport(0, 0, width, height);
+#endif
+    glViewport(0, 0, mode->width, mode->height);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSwapInterval(1);
     glEnable(GL_MULTISAMPLE);
@@ -66,12 +81,7 @@ int32 create_context(context **ctx, const std::string &titletext, int32 width, i
         glfwSetWindowIcon(window, 2, images);
         stbi_image_free(images[0].pixels);
     }
-    *ctx = new context;
-    (*ctx)->width = width;
-    (*ctx)->height = height;
-    (*ctx)->fullscreen = fullscreen;
-    (*ctx)->window = window;
-    (*ctx)->quit_requested = false;
+
     return 0;
 }
 
@@ -137,17 +147,17 @@ void clear_screen(pixel32 colour)
 
 void textout(textureatlas *atlas, const char *text, int32 x, int32 y)
 {
-	int32 len = (int32)strlen(text);
-	int32 endx = x + len * atlas->tile_width;
-	const char *ptr = text;
-	int32 xpos=x;//*atlas->tile_width;
-	bind_atlas(atlas);
-	begin_atlas(atlas);
-	for (int32 i = 0; i < len; i++)
-	{
-		int32 index = (int32)text[i];
-		draw_atlas_tile(atlas,xpos,y,atlas->tile_width,atlas->tile_height,index,x11colours::white);
-		xpos+=atlas->tile_width;
-	}
-	end_atlas(atlas);
+    int32 len = (int32)strlen(text);
+    int32 endx = x + len * atlas->tile_width;
+    const char *ptr = text;
+    int32 xpos = x; //*atlas->tile_width;
+    bind_atlas(atlas);
+    begin_atlas(atlas);
+    for (int32 i = 0; i < len; i++)
+    {
+        int32 index = (int32)text[i];
+        draw_atlas_tile(atlas, xpos, y, atlas->tile_width, atlas->tile_height, index, x11colours::white);
+        xpos += atlas->tile_width;
+    }
+    end_atlas(atlas);
 }

@@ -40,6 +40,43 @@ vec3 camera::right_vector() const
     return glm::rotate(rotation, (-vec3(1.0f, 0.0f, 0.0f)));
 }
 
+mat4x4 camera::view() const
+{
+    return glm::lookAt(position, position + forward_vector(), up_vector());
+}
+
+mat4x4 camera::projection(float32 aspectratio) const
+{
+    return glm::perspective(fov, aspectratio, znear, zfar);
+}
+
+void camera::zoom_in(float32 angle)
+{
+    fov -= angle;
+    if (fov < glm::radians(1.0f))
+    {
+        fov = glm::radians(1.0f);
+    }
+}
+
+void camera::zoom_out(float32 angle)
+{
+    fov += angle;
+    if (fov > glm::radians(90.0f))
+    {
+        fov = glm::radians(90.0f);
+    }
+}
+
+void camera::set_clip(float32 zn, float32 zf)
+{
+    if (zn > 0 && zf > zn)
+    {
+        znear = zn;
+        zfar = zf;
+    }
+}
+
 polar::polar(const float32 &lon,
              const float32 &lat,
              const float32 &alt) : lon(lon), lat(lat), alt(alt) {}
@@ -98,7 +135,7 @@ void quadratic_plot(vec2 startpos, vec2 controlpos, vec2 endpos, std::vector<vec
         const float32 c = std::pow((float32)t, 2.0);
         const float32 x = a * startpos.x + b * controlpos.x + c * endpos.x;
         const float32 y = a * startpos.y + b * controlpos.y + c * endpos.y;
-        plotresult.emplace_back(vec2(x,y));
+        plotresult.emplace_back(vec2(x, y));
     }
 }
 

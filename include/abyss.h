@@ -311,6 +311,7 @@ struct framebuffer
 // Screen and IO Handling
 //
 struct GLFWwindow;
+struct GLFWvidmode;
 struct context
 {
 	GLFWwindow *window{nullptr};
@@ -321,7 +322,7 @@ struct context
 };
 
 // context
-int32 create_context(context **ctx, const std::string &titletext, int32 width, int32 height, bool fullscreen);
+int32 create_context(context **ctx, const std::string &titletext);
 int32 destroy_context(context **ctx);
 
 // texture

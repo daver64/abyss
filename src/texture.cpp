@@ -12,7 +12,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "abyss.h"
+#include "sl.h"
 
 int32 create_texture(texture **tex, int32 width, int32 height, const bool mipmapped)
 {

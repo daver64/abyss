@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <cstring>
 #include "stb_image.h"
-#include "abyss.h"
+#include "sl.h"
 
 void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z)
 {

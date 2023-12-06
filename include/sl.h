@@ -166,33 +166,6 @@ struct textureatlas
 	int32 numtiles_y{0};
 };
 
-int32 create_atlas(textureatlas **atlas, drawbuffer *target, const std::string &filename, int32 numx, int32 numy);
-int32 destroy_atlas(textureatlas **atlas);
-void bind_atlas(textureatlas *atlas);
-void begin_atlas(textureatlas *atlas);
-void draw_atlas_tile(textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
-void draw_atlas_tile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
-void end_atlas(textureatlas *atlas);
-
-void enable_multisampling();
-void disable_multisampling();
-void enable_texturing();
-void disable_texturing();
-void enable_arrays();
-void disable_arrays();
-void enable_texture_clamping();
-void disable_texture_clamping();
-void enable_mipmapping();
-void disable_mipmapping();
-void enable_texture_filtering();
-void disable_texture_filtering();
-
-
-void texture_gpu_write(texture *tex);
-void texture_gpu_read(texture *tex);
-void texture_bind(texture *tex);
-
-void texture_unbind();
 
 //
 // Drawing Primitives
@@ -343,6 +316,33 @@ void destroy_framebuffer(framebuffer **fb);
 void bind_framebuffer(framebuffer *fb);
 void unbind_framebuffer(framebuffer *fb);
 
+int32 create_atlas(textureatlas **atlas, drawbuffer *target, const std::string &filename, int32 numx, int32 numy);
+int32 destroy_atlas(textureatlas **atlas);
+void bind_atlas(textureatlas *atlas);
+void begin_atlas(textureatlas *atlas);
+void draw_atlas_tile(textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
+void draw_atlas_tile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
+void end_atlas(textureatlas *atlas);
+
+void enable_multisampling();
+void disable_multisampling();
+void enable_texturing();
+void disable_texturing();
+void enable_arrays();
+void disable_arrays();
+void enable_texture_clamping();
+void disable_texture_clamping();
+void enable_mipmapping();
+void disable_mipmapping();
+void enable_texture_filtering();
+void disable_texture_filtering();
+
+
+void texture_gpu_write(texture *tex);
+void texture_gpu_read(texture *tex);
+void texture_bind(texture *tex);
+
+void texture_unbind();
 
 
 void disable_depthtest();
@@ -365,4 +365,5 @@ void draw_rectangle(drawbuffer *target,
 					float32 width, float32 height,
 					pixel32 colour);
 void bind_texture(drawbuffer *db, texture *tex);
-void textout(textureatlas *atlas, const char *text, int32 x, int32 y);
+void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 colour = x11colours::white);
+void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 colour, const char* fmt, ...);

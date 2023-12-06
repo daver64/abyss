@@ -2,6 +2,7 @@
 #define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 #include <cstring>
+#include <cstdarg>
 #include "stb_image.h"
 #include "sl.h"
 
@@ -145,19 +146,43 @@ void clear_screen(pixel32 colour)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void textout(textureatlas *atlas, const char *text, int32 x, int32 y)
+void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 colour)
 {
     int32 len = (int32)strlen(text);
     int32 endx = x + len * atlas->tile_width;
     const char *ptr = text;
-    int32 xpos = x; //*atlas->tile_width;
+    int32 xpos = x;
+    int32 ypos = y;
     bind_atlas(atlas);
     begin_atlas(atlas);
     for (int32 i = 0; i < len; i++)
     {
         int32 index = (int32)text[i];
-        draw_atlas_tile(atlas, xpos, y, atlas->tile_width, atlas->tile_height, index, x11colours::white);
-        xpos += atlas->tile_width;
+        if (text[i] == '\n')
+        {
+            ypos += atlas->tile_height;
+            xpos = x;
+        }
+        else if (text[i] == '\t')
+        {
+            int32 tabs = 2;
+            xpos += atlas->tile_width * tabs;
+        }
+        else
+        {
+            draw_atlas_tile(atlas, xpos, ypos, atlas->tile_width, atlas->tile_height, index, colour);
+            xpos += atlas->tile_width;
+        }
     }
     end_atlas(atlas);
+}
+
+void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 colour, const char *fmt, ...)
+{
+    char buf[4096];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, 4096, fmt, args);
+    va_end(args);
+    textout(atlas, buf, x, y, colour);
 }

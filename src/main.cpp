@@ -24,13 +24,14 @@ int main(int argc, char *argv[])
 		bind_texture(db, logo);
 		begin_quads(db);
 		static float32 xpos = 10.0f;
-		xpos += 0.1;
+		xpos += 1.0f;
 		draw_rectangle(db, xpos, 10.0f, 64.0f, 64.0f, x11colours::white);
 		if (xpos >= 400)
 			xpos = 0.0f;
 		end_quads(db);
 
-		textout(atlas, "Hello world!", 100, 52);
+		//textout(atlas, "Hello world!", 100, 52, x11colours::yellow);
+		gprintf(atlas,100.0,200.0,x11colours::tomato,"hello %d bit world.\tafter tab.\nanother line",64);
 
 		swap(app_context);
 

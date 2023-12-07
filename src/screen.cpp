@@ -6,6 +6,9 @@
 #include "stb_image.h"
 #include "sl.h"
 
+static float64 frame_delta_t_ms = 16.0;
+static float64 frame_start_t_ms = 0.0;
+
 void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z)
 {
     glViewport(0, 0, width, height);
@@ -110,10 +113,17 @@ void app_quit(context *ctx)
 void swap(context *ctx)
 {
     glfwSwapBuffers(ctx->window);
+    float64 f = glfwGetTime() * 1000.0;
+    frame_delta_t_ms = f - frame_start_t_ms;
 }
 
+const float64 get_frame_delta_t_ms()
+{
+    return frame_delta_t_ms;
+}
 void poll_input(context *ctx)
 {
+    frame_start_t_ms = glfwGetTime() * 1000.0;
     glfwPollEvents();
     if (glfwWindowShouldClose(ctx->window))
     {

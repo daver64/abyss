@@ -356,6 +356,7 @@ void process_input(context *ctx);
 void clear_screen();
 void clear_screen(pixel32 colour);
 void set_clear_colour(pixel32 colour);
+const float64 get_frame_delta_t_ms();
 
 // free form drawing
 void end_quads(drawbuffer *target);

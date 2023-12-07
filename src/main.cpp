@@ -1,26 +1,28 @@
 #include "abyss.h"
 
-bool appquit = false;
 context *app_context{nullptr};
 texture *logo{nullptr};
 drawbuffer *db{nullptr};
 textureatlas *atlas{nullptr};
 
-void app_init()
-{
-	create_context(&app_context, "Abyss");
-	create_texture(&logo, "../data/textures/bud.png");
-	create_drawbuffer(&db);
-	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
+gamelevel *current_level{nullptr};
 
+uint32 getkey(uint32 i);
+void keyboard_install(context *ctx);
+
+int32 create_level(gamelevel **level, int32 width, int32 height)
+{
+	(*level) = new gamelevel;
+	(*level)->tiles.reserve(width*height);
+
+	return 0;
 }
 
-void app_shutdown()
+int32 destroy_level(gamelevel **level)
 {
-	destroy_atlas(&atlas);
-	destroy_drawbuffer(&db);
-	destroy_texture(&logo);
-	destroy_context(&app_context);
+	delete (*level);
+	(*level)=nullptr;
+	return 0;
 }
 
 void update_and_render(const float64 delta_t_ms)
@@ -40,7 +42,8 @@ void update_and_render(const float64 delta_t_ms)
 	end_quads(db);
 
 	// bitmapped font plain text output.
-	gprintf(atlas, 64, 96, x11colours::tomato, "hello %d bit world.\tafter tab.\nanother line\n%2.2lf", 64, get_frame_delta_t_ms());
+	gprintf(atlas, 64, 96, x11colours::tomato, "hello %d bit world.\tafter tab.\nanother line\n%2.2lf", 
+		getkey(0), get_frame_delta_t_ms());
 }
 
 int main(int argc, char *argv[])
@@ -58,4 +61,21 @@ int main(int argc, char *argv[])
 	app_shutdown();
 
 	return 0;
+}
+
+void app_init()
+{
+	create_context(&app_context, "Abyss");
+	create_texture(&logo, "../data/textures/bud.png");
+	create_drawbuffer(&db);
+	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
+	keyboard_install(app_context);
+}
+
+void app_shutdown()
+{
+	destroy_atlas(&atlas);
+	destroy_drawbuffer(&db);
+	destroy_texture(&logo);
+	destroy_context(&app_context);
 }

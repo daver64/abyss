@@ -55,6 +55,8 @@ endif(MINGW)
 if(MSVC)
 add_executable(abyss
     src/main.cpp
+    src/level.cpp
+    src/entity.cpp
     src/input.cpp
     src/glext.cpp
     src/fastnoise.cpp
@@ -77,6 +79,8 @@ endif(MSVC)
 if(UNIX)
 add_executable(abyss
     src/main.cpp
+    src/level.cpp
+    src/entity.cpp
     src/input.cpp
     src/fastnoise.cpp
     src/texture.cpp

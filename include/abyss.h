@@ -29,8 +29,19 @@ struct gametile {
 struct gamelevel {
 	std::vector<gametile> tiles;
 	std::vector<gameentity> entities;
+	int32 width{0};
+	int32 height{0};
+	textureatlas *tileatlas{nullptr};
 };
+
+extern gamelevel *current_level;
 
 void app_init();
 void app_shutdown();
 void update_and_render(const float64 delta_t_ms);
+
+int32 create_level(gamelevel **level, int32 width, int32 height);
+int32 destroy_level(gamelevel **level);
+gametile *get_tile(gamelevel *level, int32 x, int32 y);
+int32 add_entity(gamelevel *level,game_entity_type type, ivec2 position = ivec2{10,10}, int32 health=10);
+int32 render_level(gamelevel *level, int32 x, int32 y, int32 width, int32 height);

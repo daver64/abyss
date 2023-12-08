@@ -368,3 +368,7 @@ void draw_rectangle(drawbuffer *target,
 void bind_texture(drawbuffer *db, texture *tex);
 void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 colour = x11colours::white);
 void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 colour, const char* fmt, ...);
+
+// keyboard  -- experimental api atm
+void keyboard_install(context *ctx);
+uint32 getkey(uint32 k); // very very temporary...

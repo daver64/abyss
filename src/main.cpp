@@ -5,25 +5,6 @@ texture *logo{nullptr};
 drawbuffer *db{nullptr};
 textureatlas *atlas{nullptr};
 
-gamelevel *current_level{nullptr};
-
-uint32 getkey(uint32 i);
-void keyboard_install(context *ctx);
-
-int32 create_level(gamelevel **level, int32 width, int32 height)
-{
-	(*level) = new gamelevel;
-	(*level)->tiles.reserve(width*height);
-
-	return 0;
-}
-
-int32 destroy_level(gamelevel **level)
-{
-	delete (*level);
-	(*level)=nullptr;
-	return 0;
-}
 
 void update_and_render(const float64 delta_t_ms)
 {
@@ -42,8 +23,8 @@ void update_and_render(const float64 delta_t_ms)
 	end_quads(db);
 
 	// bitmapped font plain text output.
-	gprintf(atlas, 64, 96, x11colours::tomato, "hello %d bit world.\tafter tab.\nanother line\n%2.2lf", 
-		getkey(0), get_frame_delta_t_ms());
+	gprintf(atlas, 64, 96, x11colours::tomato, "hello %d bit world.\tafter tab.\nanother line\n%2.2lf",
+			getkey(0), get_frame_delta_t_ms());
 }
 
 int main(int argc, char *argv[])

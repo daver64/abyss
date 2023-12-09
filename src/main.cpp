@@ -51,6 +51,8 @@ void app_init()
 	create_drawbuffer(&db);
 	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
 	keyboard_install(app_context);
+	init_sound();
+	play_sound("../data/samples/song18.mp3");
 }
 
 void app_shutdown()

@@ -58,6 +58,7 @@ add_executable(abyss
     src/level.cpp
     src/entity.cpp
     src/input.cpp
+    src/audio.cpp
     src/glext.cpp
     src/fastnoise.cpp
     src/texture.cpp
@@ -82,6 +83,7 @@ add_executable(abyss
     src/level.cpp
     src/entity.cpp
     src/input.cpp
+    src/audio.cpp
     src/fastnoise.cpp
     src/texture.cpp
     src/screen.cpp
@@ -103,12 +105,12 @@ endif(UNIX)
 ##
 if(MSVC)
 set_target_properties(abyss PROPERTIES LINK_FLAGS "/LIBPATH:../lib/win64 /ENTRY:mainCRTStartup /SUBSYSTEM:CONSOLE")
-target_link_libraries(abyss glfw3 opengl32 glu32 openal32)
+target_link_libraries(abyss glfw3 opengl32 glu32)
 endif(MSVC)
 
 ##
 ## Linux Platform Link Options
 ##
 if(UNIX)
-target_link_libraries(abyss GL GLU glfw openal)
+target_link_libraries(abyss GL GLU glfw)
 endif(UNIX)

@@ -14,8 +14,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include "glm/gtx/quaternion.hpp"
 #include <xmmintrin.h>
-#include <AL/al.h>
-#include <AL/alc.h>
+
 #ifdef _WIN32
 void load_gl_extensions();
 #include "resource.h"
@@ -283,6 +282,15 @@ struct framebuffer
 	uint32 depth_id{0};
 	bool valid{false};
 };
+
+struct soundobject
+{
+	uint32 id;
+};
+void play_sound(const std::string &filename);
+void init_sound();
+void deinit_sound();
+
 //
 // Screen and IO Handling
 //

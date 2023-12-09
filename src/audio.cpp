@@ -6,6 +6,8 @@ ma_result result;
 ma_engine *engine;
 bool audio_inited = false;
 ma_engine_config config;
+ma_sound sound;
+
 void init_sound()
 {
     
@@ -25,16 +27,17 @@ void init_sound()
 void deinit_sound()
 {
 }
-void play_sound(const std::string &filename)
+void play_sound1(const std::string &filename)
 {
     ma_engine_play_sound(engine,filename.c_str(),NULL);
 }
-void play_sound1(const std::string &filename)
+
+void play_sound(const std::string &filename)
 {
     if (!audio_inited)
         return;
     ma_result result;
-    ma_sound sound;
+   
     fprintf(stderr,"init sound from file %s\n",filename.c_str());
     result = ma_sound_init_from_file(engine, filename.c_str(), 0, NULL, NULL, &sound);
     if (result != MA_SUCCESS)

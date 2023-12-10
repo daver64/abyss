@@ -1,9 +1,0 @@
-{
-    "cmake.configureOnOpen": false,
-    "files.associations": {
-        "xstring": "cpp",
-        "xiosbase": "cpp",
-        "functional": "cpp",
-        "algorithm": "cpp"
-    }
-}

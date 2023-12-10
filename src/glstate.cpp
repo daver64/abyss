@@ -28,7 +28,7 @@ void disable_depthtest()
 void enable_blending()
 {
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 }
 void disable_blending()
 {

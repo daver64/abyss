@@ -45,4 +45,4 @@ int32 create_level(gamelevel **level, drawbuffer *targetbuffer, textureatlas *at
 int32 destroy_level(gamelevel **level);
 gametile *get_tile(gamelevel *level, int32 x, int32 y);
 int32 add_entity(gamelevel *level,game_entity_type type, ivec2 position = ivec2{10,10}, int32 health=10);
-int32 render_level(gamelevel *level, int32 x, int32 y, int32 width, int32 height);
+int32 render_level(gamelevel *level, int32 x, int32 y, int32 width, int32 height, int32 offset_x=32,int32 offset_y=32);

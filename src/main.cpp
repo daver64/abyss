@@ -17,7 +17,7 @@ void update_and_render(const float64 delta_t_ms)
 	enable_blending();
 
 	
-	render_level(level,0,0,level->width,level->height);
+	render_level(level,0,0,level->width-1,level->height-1);
 
 	// draw an animated sprite
 	bind_texture(db, logo);

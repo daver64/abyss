@@ -25,14 +25,14 @@ void update_and_render(const float64 delta_t_ms)
 	bind_texture(db, logo);
 	begin_quads(db);
 	static float32 xpos = 10.0f;
-	static float32 ypos = 400.0f;
+	static float32 ypos = 300.0f;
 	static float32 pxpos = 10.0f;
 	ypos -= 4.0f;
 	pxpos +=1.0f;
 	draw_rectangle(db, xpos, ypos, 24.0f, 24.0f, x11colours::white);
 	if (ypos < 10 && pxpos<350)
 	{
-		ypos=400.0f;
+		ypos=300.0f;
 		xpos=pxpos+12;
 		//play_sound(sfx1);
 	}
@@ -44,7 +44,7 @@ void update_and_render(const float64 delta_t_ms)
 
 	bind_texture(db,sprite1);
 	begin_quads(db);
-	draw_rectangle(db,pxpos,400,32,32,x11colours::white);
+	draw_rectangle(db,pxpos,300,32,32,x11colours::white);
 	end_quads(db);
 
 	gprintf(atlas,0,0,x11colours::green,"frame delta t ms=%2.2lf, raw getkey=%d",get_frame_delta_t_ms(),getkey(0));
@@ -74,7 +74,7 @@ void app_init()
 {
 	create_context(&app_context, "Abyss");
 	create_texture(&logo, "../data/textures/beams.png");
-	create_texture(&sprite1,"../data/textures/bud.png");
+	create_texture(&sprite1,"../data/textures/red1.png");
 	create_drawbuffer(&db);
 	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
 	create_atlas(&tileatlas,db,"../data/textures/scifitiles-sheet.png",14,6);

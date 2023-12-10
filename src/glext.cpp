@@ -7,6 +7,8 @@
 #include <GLFW/glfw3.h>
 
 #include "sl_glext.h"
+
+PFNGLBLENDFUNCSEPARATEPROC glBlendFuncSeparate = NULL;
 PFNGLGENERATEMIPMAP glGenerateMipmap = NULL;
 PFNGLBLENDEQUATIONPROC glBlendEquation = NULL;
 PFNGLGENBUFFERSPROC glGenBuffers = NULL;
@@ -69,6 +71,7 @@ void load_gl_extensions()
 	wglSwapInterval = (PFNGLWGLSWAPINTERVALPROC)wglGetProcAddress("wglSwapIntervalEXT");
 	glGenerateMipmap = (PFNGLGENERATEMIPMAP)wglGetProcAddress("glGenerateMipmap");
 	glBlendEquation = (PFNGLBLENDEQUATIONPROC)wglGetProcAddress("glBlendEquation");
+	glBlendFuncSeparate = (PFNGLBLENDFUNCSEPARATEPROC)wglGetProcAddress("glBlendFuncSeparate");
 	glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
 	glDeleteBuffers = (PFNGLDELETEBUFFERSPROC)wglGetProcAddress("glDeleteBuffers");
 	glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)wglGetProcAddress("glEnableVertexAttribArray");

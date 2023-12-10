@@ -18,6 +18,8 @@ extern "C"
 	// Only load the OpenGL extensions we are actually going to use. 
 	typedef void (APIENTRY* PFNGLBLENDEQUATIONPROC) (GLenum mode);
 	extern PFNGLBLENDEQUATIONPROC glBlendEquation;
+	typedef void (APIENTRY* PFNGLBLENDFUNCSEPARATEPROC)(GLenum src_rgb,GLenum dst_rgb,GLenum src_alpha,GLenum dst_alpha);
+	extern PFNGLBLENDFUNCSEPARATEPROC glBlendFuncSeparate;
 	typedef void (APIENTRY* PFNGLGENBUFFERSPROC)(GLsizei n, GLuint* buffers);
 	extern PFNGLGENBUFFERSPROC glGenBuffers;
 	typedef void (APIENTRY* PFNGLDELETEBUFFERSPROC)(GLsizei n, GLuint* buffers);

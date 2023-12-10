@@ -2,6 +2,7 @@
 
 context *app_context{nullptr};
 texture *logo{nullptr};
+texture *sprite1{nullptr};
 drawbuffer *db{nullptr};
 textureatlas *atlas{nullptr};
 soundobject *music{nullptr};
@@ -16,20 +17,33 @@ void update_and_render(const float64 delta_t_ms)
 	disable_depthtest();
 	enable_blending();
 
-	
+
 	render_level(level,0,0,level->width-1,level->height-1);
 
 	// draw an animated sprite
 	bind_texture(db, logo);
 	begin_quads(db);
 	static float32 xpos = 10.0f;
-	xpos += 1.0f;
-	draw_rectangle(db, xpos, 10.0f, 64.0f, 64.0f, x11colours::white);
-	if (xpos >= 400)
+	static float32 ypos = 300.0f;
+	static float32 pxpos = 10.0f;
+	ypos -= 3.0f;
+	pxpos +=1.0f;
+	draw_rectangle(db, xpos, ypos, 24.0f, 24.0f, x11colours::white);
+	if (ypos < 10 && pxpos<350)
 	{
-		xpos = 0.0f;
+		ypos=300.0f;
+		xpos=pxpos+12;
 		play_sound(sfx1);
 	}
+	if(pxpos>400)
+	{
+		pxpos=10.0f;
+	}
+	end_quads(db);
+
+	bind_texture(db,sprite1);
+	begin_quads(db);
+	draw_rectangle(db,pxpos,300,32,32,x11colours::white);
 	end_quads(db);
 
 	
@@ -58,7 +72,8 @@ int main(int argc, char *argv[])
 void app_init()
 {
 	create_context(&app_context, "Abyss");
-	create_texture(&logo, "../data/textures/bud.png");
+	create_texture(&logo, "../data/textures/beams.png");
+	create_texture(&sprite1,"../data/textures/bud.png");
 	create_drawbuffer(&db);
 	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
 	keyboard_install(app_context);
@@ -75,6 +90,7 @@ void app_shutdown()
 	destroy_atlas(&atlas);
 	destroy_drawbuffer(&db);
 	destroy_texture(&logo);
+	destroy_texture(&sprite1);
 	destroy_soundobject(&music);
 	destroy_soundobject(&sfx1);
 	destroy_context(&app_context);

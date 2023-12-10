@@ -5,7 +5,7 @@ texture *logo{nullptr};
 drawbuffer *db{nullptr};
 textureatlas *atlas{nullptr};
 soundobject *music{nullptr};
-
+soundobject *sfx1{nullptr};
 void update_and_render(const float64 delta_t_ms)
 {
 	clear_screen(x11colours::black);
@@ -19,7 +19,10 @@ void update_and_render(const float64 delta_t_ms)
 	xpos += 1.0f;
 	draw_rectangle(db, xpos, 10.0f, 64.0f, 64.0f, x11colours::white);
 	if (xpos >= 400)
+	{
 		xpos = 0.0f;
+		play_sound(sfx1);
+	}
 	end_quads(db);
 
 	// bitmapped font plain text output.
@@ -52,6 +55,7 @@ void app_init()
 	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
 	keyboard_install(app_context);
 	
+	create_soundobject(&sfx1,"../data/samples/cloth-inventory.wav");
 	create_soundobject(&music,"../data/samples/song18.mp3");
 	play_sound(music);
 }

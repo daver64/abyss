@@ -2,51 +2,51 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 #include "abyss.h"
-ma_result result;
-ma_engine *engine;
-bool audio_inited = false;
+ma_engine *engine{nullptr};
 ma_engine_config config;
-ma_sound sound;
 
-void init_sound()
+int32 create_soundobject(soundobject **sobj, const std::string &filename)
 {
-    
-    
+    (*sobj) = new soundobject;
+    (*sobj)->sound = new ma_sound;
+    ma_result result = ma_sound_init_from_file(engine, filename.c_str(), 0, NULL, NULL, (*sobj)->sound);
+    if (result != MA_SUCCESS)
+    {
+        fprintf(stderr, "could not load %s\n", filename.c_str());
+        delete (*sobj)->sound;
+        delete (*sobj);
+        (*sobj) = nullptr;
+        return 1;
+    }
+    return 0;
+}
+void destroy_soundobject(soundobject **sobj)
+{
+}
+int32 play_sound(soundobject *sobj)
+{
+    ma_sound_set_volume(sobj->sound, 0.15);
+    ma_result result = ma_sound_start(sobj->sound);
+    if(result!=MA_SUCCESS)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int32 init_sound()
+{
     engine = new ma_engine;
     config = ma_engine_config_init();
-    result = ma_engine_init(&config, engine);
+    ma_result result = ma_engine_init(&config, engine);
     if (result != MA_SUCCESS)
     {
         fprintf(stderr, "failed to init audio engine\n");
-        audio_inited = false;
-        return;
+        return 1;
     }
-    fprintf(stderr,"audio engine init ok\n");
-    audio_inited = true;
+    return 0;
 }
 void deinit_sound()
 {
-}
-void play_sound1(const std::string &filename)
-{
-    ma_engine_play_sound(engine,filename.c_str(),NULL);
-}
-
-void play_sound(const std::string &filename)
-{
-    if (!audio_inited)
-        return;
-    ma_result result;
-   
-    fprintf(stderr,"init sound from file %s\n",filename.c_str());
-    result = ma_sound_init_from_file(engine, filename.c_str(), 0, NULL, NULL, &sound);
-    if (result != MA_SUCCESS)
-    {
-        fprintf(stderr,"could not load %s\n", filename.c_str());
-    }
-    else
-    {
-        fprintf(stderr,"playback sound\n");
-        ma_sound_start(&sound);
-    }
+    ma_engine_uninit(engine);
 }

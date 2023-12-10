@@ -283,12 +283,16 @@ struct framebuffer
 	bool valid{false};
 };
 
+struct ma_sound;
 struct soundobject
 {
-	uint32 id;
+	ma_sound *sound;
 };
-void play_sound(const std::string &filename);
-void init_sound();
+int32 create_soundobject(soundobject **sobj,const std::string &filename);
+void destroy_soundobject(soundobject **sobj);
+int32 play_sound(soundobject *sobj);
+
+int32 init_sound();
 void deinit_sound();
 
 //

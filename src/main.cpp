@@ -4,7 +4,7 @@ context *app_context{nullptr};
 texture *logo{nullptr};
 drawbuffer *db{nullptr};
 textureatlas *atlas{nullptr};
-
+soundobject *music{nullptr};
 
 void update_and_render(const float64 delta_t_ms)
 {
@@ -52,7 +52,8 @@ void app_init()
 	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
 	keyboard_install(app_context);
 	init_sound();
-	play_sound("../data/samples/song18.mp3");
+	create_soundobject(&music,"../data/samples/song18.mp3");
+	play_sound(music);
 }
 
 void app_shutdown()
@@ -61,4 +62,5 @@ void app_shutdown()
 	destroy_drawbuffer(&db);
 	destroy_texture(&logo);
 	destroy_context(&app_context);
+	deinit_sound();
 }

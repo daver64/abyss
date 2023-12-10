@@ -37,7 +37,7 @@ endif(MSVC)
 ## Linux Compile Flags
 ##
 if(UNIX)
-set(CMAKE_CXX_FLAGS "-I../include -I../src/imgui -I../src/imgui/backends -O2 -msse")
+set(CMAKE_CXX_FLAGS "-I../include -I../src/imgui -I../src/imgui/backends -O2 -msse2")
 endif(UNIX)
 
 

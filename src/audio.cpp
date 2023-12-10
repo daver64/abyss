@@ -28,6 +28,7 @@ int32 create_soundobject(soundobject **sobj, const std::string &filename)
 void destroy_soundobject(soundobject **sobj)
 {
     ma_sound_stop((*sobj)->sound);
+    ma_sound_uninit((*sobj)->sound);
     delete (*sobj)->sound;
     delete (*sobj);
     (*sobj)=nullptr;

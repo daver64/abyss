@@ -66,5 +66,6 @@ void app_shutdown()
 	destroy_drawbuffer(&db);
 	destroy_texture(&logo);
 	destroy_soundobject(&music);
+	destroy_soundobject(&sfx1);
 	destroy_context(&app_context);
 }

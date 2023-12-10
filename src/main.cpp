@@ -6,11 +6,18 @@ drawbuffer *db{nullptr};
 textureatlas *atlas{nullptr};
 soundobject *music{nullptr};
 soundobject *sfx1{nullptr};
+
+
+gamelevel *level{nullptr};
 void update_and_render(const float64 delta_t_ms)
 {
 	clear_screen(x11colours::black);
 	ortho2d(800, 600, false, -1.0f, 1.0f);
 	disable_depthtest();
+	enable_blending();
+
+	
+	render_level(level,0,0,level->width,level->height);
 
 	// draw an animated sprite
 	bind_texture(db, logo);
@@ -25,9 +32,10 @@ void update_and_render(const float64 delta_t_ms)
 	}
 	end_quads(db);
 
+	
 	// bitmapped font plain text output.
-	gprintf(atlas, 64, 96, x11colours::tomato, "hello %d bit world.\tafter tab.\nanother line\n%2.2lf",
-			getkey(0), get_frame_delta_t_ms());
+	//gprintf(atlas, 64, 96, x11colours::tomato, "hello %d bit world.\tafter tab.\nanother line\n%2.2lf",
+	//		getkey(0), get_frame_delta_t_ms());
 }
 
 int main(int argc, char *argv[])
@@ -58,6 +66,8 @@ void app_init()
 	create_soundobject(&sfx1,"../data/samples/cloth-inventory.wav");
 	create_soundobject(&music,"../data/samples/song18.mp3");
 	play_sound(music);
+
+	create_level(&level,db,atlas,80,25);
 }
 
 void app_shutdown()

@@ -25,7 +25,15 @@ void disable_depthtest()
 {
     glDisable(GL_DEPTH_TEST);
 }
-
+void enable_blending()
+{
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+}
+void disable_blending()
+{
+    glDisable(GL_BLEND);
+}
 void set_clear_colour(pixel32 colour)
 {
     const float32 r = getr_nf(colour);

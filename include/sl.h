@@ -348,7 +348,8 @@ void enable_mipmapping();
 void disable_mipmapping();
 void enable_texture_filtering();
 void disable_texture_filtering();
-
+void enable_blending();
+void disable_blending();
 
 void texture_gpu_write(texture *tex);
 void texture_gpu_read(texture *tex);

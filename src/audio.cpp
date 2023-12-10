@@ -7,6 +7,11 @@ ma_engine_config config;
 
 int32 create_soundobject(soundobject **sobj, const std::string &filename)
 {
+    if(!engine)
+    {
+        (*sobj)=nullptr;
+        return 2;
+    }
     (*sobj) = new soundobject;
     (*sobj)->sound = new ma_sound;
     ma_result result = ma_sound_init_from_file(engine, filename.c_str(), 0, NULL, NULL, (*sobj)->sound);
@@ -22,9 +27,20 @@ int32 create_soundobject(soundobject **sobj, const std::string &filename)
 }
 void destroy_soundobject(soundobject **sobj)
 {
+    ma_sound_stop((*sobj)->sound);
+    delete (*sobj)->sound;
+    delete (*sobj);
+    (*sobj)=nullptr;
 }
 int32 play_sound(soundobject *sobj)
 {
+    if(!engine)
+        return 2;
+    if(ma_sound_is_playing(sobj->sound))
+    {
+        ma_sound_stop(sobj->sound);
+        ma_sound_seek_to_pcm_frame(sobj->sound, 0);
+    }
     ma_sound_set_volume(sobj->sound, 0.15);
     ma_result result = ma_sound_start(sobj->sound);
     if(result!=MA_SUCCESS)
@@ -41,6 +57,8 @@ int32 init_sound()
     ma_result result = ma_engine_init(&config, engine);
     if (result != MA_SUCCESS)
     {
+        delete engine;
+        engine = nullptr;
         fprintf(stderr, "failed to init audio engine\n");
         return 1;
     }
@@ -48,5 +66,6 @@ int32 init_sound()
 }
 void deinit_sound()
 {
-    ma_engine_uninit(engine);
+    if(engine)
+        ma_engine_uninit(engine);
 }

@@ -85,7 +85,7 @@ int32 create_context(context **ctx, const std::string &titletext)
         glfwSetWindowIcon(window, 2, images);
         stbi_image_free(images[0].pixels);
     }
-
+    init_sound();
     return 0;
 }
 
@@ -95,6 +95,7 @@ int32 destroy_context(context **ctx)
     delete (*ctx);
     *ctx = nullptr;
     glfwTerminate();
+    deinit_sound();
     return 0;
 }
 

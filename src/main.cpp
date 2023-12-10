@@ -51,7 +51,7 @@ void app_init()
 	create_drawbuffer(&db);
 	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
 	keyboard_install(app_context);
-	init_sound();
+	
 	create_soundobject(&music,"../data/samples/song18.mp3");
 	play_sound(music);
 }
@@ -61,6 +61,6 @@ void app_shutdown()
 	destroy_atlas(&atlas);
 	destroy_drawbuffer(&db);
 	destroy_texture(&logo);
+	destroy_soundobject(&music);
 	destroy_context(&app_context);
-	deinit_sound();
 }

@@ -94,7 +94,6 @@ int32 create_fullscreen_context(context** ctx, const std::string& titletext)
 }
 int32 create_windowed_context(context** ctx, int32 width, int32 height, const std::string& titletext)
 {
-
     glfwSetErrorCallback(glfw_error_callback);
     glfwInit();
 
@@ -150,10 +149,8 @@ int32 create_windowed_context(context** ctx, int32 width, int32 height, const st
 void destroy_context(context **ctx)
 {
     assert(*ctx);
-   // delete (*ctx);
     global_free(*ctx);
     *ctx = nullptr;
     glfwTerminate();
     deinit_sound();
-
 }

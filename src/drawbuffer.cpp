@@ -13,92 +13,91 @@
 #include "sl.h"
 #define MAX_BUFFER_VERTICES (300000)
 
-
 int32 create_drawbuffer(drawbuffer **db)
 {
     (*db) = (drawbuffer *)global_alloc(sizeof(drawbuffer));
-    if(!(*db))
+    if (!(*db))
         return ERROR_CREATE_DRAWBUFFER_DRAWBUFFER;
 
     (*db)->vertices = (vec3 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec3));
-    if(!(*db)->vertices)
+    if (!(*db)->vertices)
     {
         global_free((*db));
-        (*db)=nullptr;
+        (*db) = nullptr;
         return ERROR_CREATE_DRAWBUFFER_VERTICES;
     }
     (*db)->normals = (vec3 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec3));
-    if(!(*db)->normals)
+    if (!(*db)->normals)
     {
         global_free((*db)->vertices);
         global_free((*db));
-        (*db)=nullptr;
+        (*db) = nullptr;
         return ERROR_CREATE_DRAWBUFFER_NORMALS;
     }
     (*db)->colours = (rgba *)global_alloc(MAX_BUFFER_VERTICES * sizeof(rgba));
-    if(!(*db)->colours)
+    if (!(*db)->colours)
     {
         global_free((*db)->vertices);
         global_free((*db)->normals);
         global_free((*db));
-        (*db)=nullptr;
+        (*db) = nullptr;
         return ERROR_CREATE_DRAWBUFFER_COLOURS;
     }
     (*db)->texture_coordinates = (vec2 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec2));
-    if(!(*db)->texture_coordinates)
+    if (!(*db)->texture_coordinates)
     {
         global_free((*db)->vertices);
         global_free((*db)->normals);
         global_free((*db)->colours);
         global_free((*db));
-        (*db)=nullptr;
+        (*db) = nullptr;
         return ERROR_CREATE_DRAWBUFFER_TEXTURECOORDS;
     }
     (*db)->array_capacity = MAX_BUFFER_VERTICES;
     (*db)->array_index = 0;
-    (*db)->current_colour = rgba{ 1,1,1,1 };
-    (*db)->current_normal = vec3{ 0,1,0 };
-    (*db)->current_vertex = vec3{ 0,0,0 };
-    (*db)->current_texture_coordinate = vec2{ 0,0 };
+    (*db)->current_colour = rgba{1, 1, 1, 1};
+    (*db)->current_normal = vec3{0, 1, 0};
+    (*db)->current_vertex = vec3{0, 0, 0};
+    (*db)->current_texture_coordinate = vec2{0, 0};
     (*db)->tex0_glref = 0;
     (*db)->tex1_glref = 0;
     (*db)->tex2_glref = 0;
     (*db)->tex3_glref = 0;
-    glGenBuffers(1,&(*db)->glref);
-    if((*db)->glref<1)
+    glGenBuffers(1, &(*db)->glref);
+    if ((*db)->glref < 1)
     {
         global_free((*db)->vertices);
         global_free((*db)->normals);
         global_free((*db)->colours);
         global_free((*db)->texture_coordinates);
         global_free((*db));
-        (*db)=nullptr;
+        (*db) = nullptr;
         return ERROR_CREATE_DRAWBUFFER_GLREF;
     }
     return CREATE_DRAWBUFFER_NO_ERROR;
 }
 int32 destroy_drawbuffer(drawbuffer **db)
 {
-    glDeleteBuffers(1,&(*db)->glref);
-        global_free((*db)->vertices);
-        global_free((*db)->normals);
-        global_free((*db)->colours);
-        global_free((*db)->texture_coordinates);
-        global_free((*db));
-        (*db)=nullptr;  
-        return DESTROY_DRAWBUFFER_NO_ERROR;  
+    glDeleteBuffers(1, &(*db)->glref);
+    global_free((*db)->vertices);
+    global_free((*db)->normals);
+    global_free((*db)->colours);
+    global_free((*db)->texture_coordinates);
+    global_free((*db));
+    (*db) = nullptr;
+    return DESTROY_DRAWBUFFER_NO_ERROR;
 }
 void begin_triangles(drawbuffer *db)
 {
-    db->primitive=GL_TRIANGLES;
+    db->primitive = GL_TRIANGLES;
 }
 void begin_quads(drawbuffer *db)
 {
-    db->primitive=GL_QUADS;
+    db->primitive = GL_QUADS;
 }
 void begin_lines(drawbuffer *db)
 {
-    db->primitive=GL_LINES;
+    db->primitive = GL_LINES;
 }
 void end_triangles(drawbuffer *db)
 {
@@ -120,82 +119,77 @@ void vertex(drawbuffer *db, vec3 vtx)
     db->colours[db->array_index] = db->current_colour;
     db->texture_coordinates[db->array_index] = db->current_texture_coordinate;
     db->array_index++;
-    assert(db->array_index<db->array_capacity);
+    assert(db->array_index < db->array_capacity);
 }
-void rectangle(drawbuffer* db, vec2 position, float32 width, float32 height, pixel32 pixel)
+void rectangle(drawbuffer *db, vec2 position, float32 width, float32 height, pixel32 pixel)
 {
-    vec3 v1 = vec3{ position.x, position.y, 0 };
-    vec3 v2 = vec3{ position.x + width,position.y,0 };
-    vec3 v3 = vec3{ position.x + width,position.y + height,0 };
-    vec3 v4 = vec3{ position.x, position.y + height,0 };
+    vec3 v1 = vec3{position.x, position.y, 0};
+    vec3 v2 = vec3{position.x + width, position.y, 0};
+    vec3 v3 = vec3{position.x + width, position.y + height, 0};
+    vec3 v4 = vec3{position.x, position.y + height, 0};
     quad(db, v1, v2, v3, v4, pixel, pixel, pixel, pixel);
 }
-void rectangle(drawbuffer* db,float32 x,float32 y,float32 width,float32 height,pixel32 pixel)
+void rectangle(drawbuffer *db, float32 x, float32 y, float32 width, float32 height, pixel32 pixel)
 {
-    rectangle(db,vec2(x,y),width,height,pixel);
+    rectangle(db, vec2(x, y), width, height, pixel);
 }
-void triangle(drawbuffer* db, vec3 v1, vec3 v2, vec3 v3, pixel32 pixel)
+void triangle(drawbuffer *db, vec3 v1, vec3 v2, vec3 v3, pixel32 pixel)
 {
-    colour(db,pixel);
-    vertex(db,v1);
-    vertex(db,v2);
-    vertex(db,v3);
-
+    colour(db, pixel);
+    vertex(db, v1);
+    vertex(db, v2);
+    vertex(db, v3);
 }
-void quad(drawbuffer* db, vec3 v1, vec3 v2, vec3 v3, vec3 v4, pixel32 pixel1, pixel32 pixel2, pixel32 pixel3, pixel32 pixel4)
+void quad(drawbuffer *db, vec3 v1, vec3 v2, vec3 v3, vec3 v4, pixel32 pixel1, pixel32 pixel2, pixel32 pixel3, pixel32 pixel4)
 {
 
-    colour(db,pixel1);
-    texture_coordinate(db,vec2{0,0});
-    vertex(db,v1);
+    colour(db, pixel1);
+    texture_coordinate(db, vec2{0, 0});
+    vertex(db, v1);
 
-    colour(db,pixel2);
-    texture_coordinate(db,vec2{1,0});
-    vertex(db,v2);
+    colour(db, pixel2);
+    texture_coordinate(db, vec2{1, 0});
+    vertex(db, v2);
 
-    colour(db,pixel3);
-    texture_coordinate(db,vec2{1,1});
-    vertex(db,v3);
+    colour(db, pixel3);
+    texture_coordinate(db, vec2{1, 1});
+    vertex(db, v3);
 
-    colour(db,pixel4);
-    texture_coordinate(db,vec2{0,1});
-    vertex(db,v4);
-
+    colour(db, pixel4);
+    texture_coordinate(db, vec2{0, 1});
+    vertex(db, v4);
 }
-void quad(drawbuffer *db, vertexdata v1, vertexdata v2,vertexdata v3, vertexdata v4)
+void quad(drawbuffer *db, vertexdata v1, vertexdata v2, vertexdata v3, vertexdata v4)
 {
-    colour(db,v1.colour);
-    texture_coordinate(db,v1.texture_coordinates);
-    vertex(db,v1.position);
+    colour(db, v1.colour);
+    texture_coordinate(db, v1.texture_coordinates);
+    vertex(db, v1.position);
 
-    colour(db,v2.colour);
-    texture_coordinate(db,v2.texture_coordinates);
-    vertex(db,v2.position);
+    colour(db, v2.colour);
+    texture_coordinate(db, v2.texture_coordinates);
+    vertex(db, v2.position);
 
-    colour(db,v3.colour);
-    texture_coordinate(db,v3.texture_coordinates);
-    vertex(db,v3.position);
+    colour(db, v3.colour);
+    texture_coordinate(db, v3.texture_coordinates);
+    vertex(db, v3.position);
 
-    colour(db,v4.colour);
-    texture_coordinate(db,v4.texture_coordinates);
-    vertex(db,v4.position);    
-
-
+    colour(db, v4.colour);
+    texture_coordinate(db, v4.texture_coordinates);
+    vertex(db, v4.position);
 }
-void triangle(drawbuffer *db, vertexdata v1,vertexdata v2,vertexdata v3)
+void triangle(drawbuffer *db, vertexdata v1, vertexdata v2, vertexdata v3)
 {
-    colour(db,v1.colour);
-    texture_coordinate(db,v1.texture_coordinates);
-    vertex(db,v1.position);
+    colour(db, v1.colour);
+    texture_coordinate(db, v1.texture_coordinates);
+    vertex(db, v1.position);
 
-    colour(db,v2.colour);
-    texture_coordinate(db,v2.texture_coordinates);
-    vertex(db,v2.position);
+    colour(db, v2.colour);
+    texture_coordinate(db, v2.texture_coordinates);
+    vertex(db, v2.position);
 
-    colour(db,v3.colour);
-    texture_coordinate(db,v3.texture_coordinates);
-    vertex(db,v3.position);
-
+    colour(db, v3.colour);
+    texture_coordinate(db, v3.texture_coordinates);
+    vertex(db, v3.position);
 }
 void normal(drawbuffer *db, vec3 nml)
 {
@@ -208,37 +202,37 @@ void texture_coordinate(drawbuffer *db, vec2 tc)
 rgba from_pixel32(pixel32 pixel)
 {
     rgba cc;
-    cc.r=getr_nf(pixel);
-    cc.g=getg_nf(pixel);
-    cc.b=getb_nf(pixel);
-    cc.a=geta_nf(pixel);
-    return cc;    
+    cc.r = getr_nf(pixel);
+    cc.g = getg_nf(pixel);
+    cc.b = getb_nf(pixel);
+    cc.a = geta_nf(pixel);
+    return cc;
 }
 pixel32 from_rgba(rgba pixel)
 {
-    assert(pixel.r>=0 && pixel.r<=1.0f);
-    assert(pixel.g>=0 && pixel.g<=1.0f);
-    assert(pixel.b>=0 && pixel.b<=1.0f);
-    assert(pixel.a>=0 && pixel.a<=1.0f);
-             
-    uint8 r=pixel.r * 255;
-    uint8 g=pixel.g * 255;
-    uint8 b=pixel.b * 255;
-    uint8 a=pixel.a * 255;
-    return argb(a,r,g,b);
+    assert(pixel.r >= 0 && pixel.r <= 1.0f);
+    assert(pixel.g >= 0 && pixel.g <= 1.0f);
+    assert(pixel.b >= 0 && pixel.b <= 1.0f);
+    assert(pixel.a >= 0 && pixel.a <= 1.0f);
+
+    uint8 r = pixel.r * 255;
+    uint8 g = pixel.g * 255;
+    uint8 b = pixel.b * 255;
+    uint8 a = pixel.a * 255;
+    return argb(a, r, g, b);
 }
 void colour(drawbuffer *db, pixel32 pixel)
 {
     rgba cc;
-    cc.r=getr_nf(pixel);
-    cc.g=getg_nf(pixel);
-    cc.b=getb_nf(pixel);
-    cc.a=geta_nf(pixel);
+    cc.r = getr_nf(pixel);
+    cc.g = getg_nf(pixel);
+    cc.b = getb_nf(pixel);
+    cc.a = geta_nf(pixel);
     db->current_colour = cc;
 }
 void colour(drawbuffer *db, rgba pixel)
 {
-    db->current_colour=pixel;
+    db->current_colour = pixel;
 }
 void draw(drawbuffer *db)
 {
@@ -266,24 +260,23 @@ void draw(drawbuffer *db)
         glBindTexture(GL_TEXTURE_2D, db->tex0_glref);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glBufferSubData(GL_ARRAY_BUFFER, (GLint)db->tex0_offset, tex0_coord_size, db->texture_coordinates);
-        glTexCoordPointer(2, GL_FLOAT, 0, (void*)db->tex0_offset);
+        glTexCoordPointer(2, GL_FLOAT, 0, (void *)db->tex0_offset);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     }
     glVertexPointer(3, GL_FLOAT, 0, (void *)db->vert_offset);
     glNormalPointer(GL_FLOAT, 0, (void *)db->norm_offset);
     glColorPointer(4, GL_FLOAT, 0, (void *)db->col_offset);
 
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	
     glDrawArrays(db->primitive, 0, (GLsizei)db->array_index);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
 
     if (db->tex0_glref)
     {
@@ -292,7 +285,7 @@ void draw(drawbuffer *db)
         glActiveTexture(GL_TEXTURE0);
         glClientActiveTexture(GL_TEXTURE0);
     }
-    db->array_index=0;
+    db->array_index = 0;
 }
 
 void reset(drawbuffer *db)

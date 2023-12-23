@@ -7,7 +7,8 @@ uint32 keys[4] { 0,0,0,0};
 
 uint32 getkey(uint32 k)
 {
-    return keys[k];
+    uint32 rk=keys[k];
+    return rk;
 }
 void keyboard_callback(GLFWwindow *window, int32 key, int32 scancode, int32 action, int32 mods)
 {

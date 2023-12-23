@@ -47,7 +47,8 @@ void update_and_render(const float64 delta_t_ms)
 	rectangle(db,pxpos,300,32,32,x11colours::white);
 	end_quads(db);
 
-	gprintf(atlas,0,0,x11colours::green,"frame delta t ms=%2.2lf, raw getkey=%d",get_frame_delta_t_ms(),getkey(0));
+	gprintf(atlas,0,0,x11colours::green,"frame delta t ms=%2.0lf, raw getkey=%d",
+		std::floor(get_frame_delta_t_ms()),getkey(0));
 	// bitmapped font plain text output.
 	//gprintf(atlas, 64, 96, x11colours::tomato, "hello %d bit world.\tafter tab.\nanother line\n%2.2lf",
 	//		getkey(0), get_frame_delta_t_ms());

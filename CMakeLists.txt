@@ -58,6 +58,8 @@ add_executable(abyss
     src/level.cpp
     src/entity.cpp
     src/input.cpp
+    src/context.cpp
+    src/utility.cpp
     src/audio.cpp
     src/glext.cpp
     src/fastnoise.cpp
@@ -83,6 +85,8 @@ add_executable(abyss
     src/level.cpp
     src/entity.cpp
     src/input.cpp
+    src/context.cpp
+    src/utility.cpp
     src/audio.cpp
     src/fastnoise.cpp
     src/texture.cpp

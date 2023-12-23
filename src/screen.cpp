@@ -22,82 +22,7 @@ void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z
     glLoadIdentity();
 }
 
-static void glfw_error_callback(int32 error, const char *description)
-{
-    fprintf(stderr, "Error %d : %s\n", error, description);
-}
 
-static void framebuffer_size_callback(GLFWwindow *window, int32 width, int32 height)
-{
-    glViewport(0, 0, width, height);
-}
-void make_current(context *ctx)
-{
-    glfwMakeContextCurrent(ctx->window);
-}
-int32 create_context(context **ctx, const std::string &titletext)
-{
-
-    glfwSetErrorCallback(glfw_error_callback);
-    glfwInit();
-
-    *ctx = new context;
-    (*ctx)->fullscreen = true;
-    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-    (*ctx)->width = mode->width;
-    (*ctx)->height = mode->height;
-    (*ctx)->quit_requested = false;
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-
-    GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, titletext.c_str(), monitor, nullptr);
-    (*ctx)->window = window;
-    if (!window)
-    {
-        fprintf(stderr, "failed to create window\n");
-        glfwTerminate();
-        return -1;
-    }
-
-    glfwMakeContextCurrent(window);
-#ifdef _WIN32
-    load_gl_extensions();
-#endif
-    glViewport(0, 0, mode->width, mode->height);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSwapInterval(1);
-    glEnable(GL_MULTISAMPLE);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_NORMALIZE);
-    glShadeModel(GL_SMOOTH);
-
-    GLFWimage images[2];
-    images[0].pixels = stbi_load("../data/textures/bud.png", &images[0].width, &images[0].height, 0, 4);
-    images[1].pixels = stbi_load("../data/textures/bud.png", &images[1].width, &images[1].height, 0, 4);
-    if (images[0].pixels && images[1].pixels)
-    {
-        glfwSetWindowIcon(window, 2, images);
-        stbi_image_free(images[0].pixels);
-    }
-    init_sound();
-    return 0;
-}
-
-int32 destroy_context(context **ctx)
-{
-    assert(*ctx);
-    delete (*ctx);
-    *ctx = nullptr;
-    glfwTerminate();
-    deinit_sound();
-    return 0;
-}
 
 bool want_to_quit(context *ctx)
 {
@@ -111,16 +36,33 @@ void app_quit(context *ctx)
     ctx->quit_requested = true;
 }
 
+#define NUM_TIME_SAMPLES 8
+float64 average_frame_delta_t_ms{0.0};
+float64 average_frame_delta_t_ms_samples[NUM_TIME_SAMPLES]{0.0};
+int32 average_frame_delta_t_index = 0;
 void swap(context *ctx)
 {
     glfwSwapBuffers(ctx->window);
     float64 f = glfwGetTime() * 1000.0;
     frame_delta_t_ms = f - frame_start_t_ms;
+    average_frame_delta_t_ms_samples[average_frame_delta_t_index] = frame_delta_t_ms;
+    average_frame_delta_t_index++;
+    average_frame_delta_t_index = average_frame_delta_t_index % NUM_TIME_SAMPLES;
 }
 
 const float64 get_frame_delta_t_ms()
 {
-    return frame_delta_t_ms;
+    float64 result = 0.0f;
+    for (int32 i = 0; i < NUM_TIME_SAMPLES; i++)
+    {
+        result += average_frame_delta_t_ms_samples[i];
+    }
+    if (result > 0.0)
+    {
+        result /= (float64)NUM_TIME_SAMPLES;
+    }
+
+    return result;
 }
 void poll_input(context *ctx)
 {
@@ -147,17 +89,21 @@ void clear_screen()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void clear_screen(pixel32 colour)
+void clear_screen(pixel32 clearcolour)
 {
-    const float32 r = getr_nf(colour);
-    const float32 g = getg_nf(colour);
-    const float32 b = getb_nf(colour);
-    const float32 a = geta_nf(colour);
+    const float32 r = getr_nf(clearcolour);
+    const float32 g = getg_nf(clearcolour);
+    const float32 b = getb_nf(clearcolour);
+    const float32 a = geta_nf(clearcolour);
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-
-void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 colour)
+void clear_screen(rgba clearcolour)
+{
+    glClearColor(clearcolour.r,clearcolour.g,clearcolour.b,clearcolour.a);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+}
+void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 textcolour)
 {
     int32 len = (int32)strlen(text);
     int32 endx = x + len * atlas->tile_width;
@@ -181,19 +127,19 @@ void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 co
         }
         else
         {
-            draw_atlas_tile(atlas, xpos, ypos, atlas->tile_width, atlas->tile_height, index, colour);
+            draw_atlas_tile(atlas, xpos, ypos, atlas->tile_width, atlas->tile_height, index, textcolour);
             xpos += atlas->tile_width;
         }
     }
     end_atlas(atlas);
 }
 
-void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 colour, const char *fmt, ...)
+void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 textcolour, const char *fmt, ...)
 {
     char buf[4096];
     va_list args;
     va_start(args, fmt);
     vsnprintf(buf, 4096, fmt, args);
     va_end(args);
-    textout(atlas, buf, x, y, colour);
+    textout(atlas, buf, x, y, textcolour);
 }

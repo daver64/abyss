@@ -11,8 +11,8 @@ extern const float32 TAUf;
 extern const float32 PIDIV2f;
 extern float32 ROUNDING_ERRORf;
 
-inline float32 lerp(float32 v1, float32 v2, float32 a) { return (v1 * (1.0f - a) + v2 * a); }
-inline float64 lerp(float64 v1, float64 v2, float64 a) { return (v1 * (1.0 - a) + v2 * a); }
+//inline float32 lerp(float32 v1, float32 v2, float32 a) { return (v1 * (1.0f - a) + v2 * a); }
+//inline float64 lerp(float64 v1, float64 v2, float64 a) { return (v1 * (1.0 - a) + v2 * a); }
 inline float64 degtorad(float64 val) { return val * 0.0174532925; }
 inline float32 degtorad(float32 val) { return val * 0.0174532925f; }
 inline float64 radtodeg(float64 val) { return val * 57.2957795; }

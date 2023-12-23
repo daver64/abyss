@@ -25,7 +25,18 @@ void load_gl_extensions();
 #include "sl_internal.h"
 #include "sl_maths.h"
 
+//
+// Colour Primitive
+//
+struct rgba {
+	float32 r{1.0f};
+	float32 g{1.0f};
+	float32 b{1.0f};
+	float32 a{1.0f};
+};
 
+rgba from_pixel32(pixel32 pixel);
+pixel32 from_rgba(rgba pixel);
 //
 // Texture Handling
 //
@@ -36,6 +47,8 @@ struct texture
 	int32 width{0};
 	int32 height{0};
 };
+
+
 class drawbuffer;
 struct textureatlas
 {
@@ -51,108 +64,42 @@ struct textureatlas
 //
 // Drawing Primitives
 //
-class drawbuffer
-{
-public:
-	// drawbuffer(GLenum primitive = GL_TRIANGLES, GLenum usage = GL_DYNAMIC_DRAW);
-	drawbuffer(bool triangles = true, bool dynamic = true);
-	~drawbuffer();
-	void vertex(vec3 v);
-	void vertex(vec2 v);
-	void vertex(float32 x, float32 y, float32 z);
-	void normal(vec3 n);
-	void normal(float32 nx, float32 ny, float32 nz);
-	void texcoord(vec2 t);
-	void texcoord(float32 u, float32 v);
-	void texcoord0(vec2 t);
-	void texcoord1(vec2 t);
-	void texcoord2(vec2 t);
-	void texcoord3(vec2 t);
-	void texcoord0(float32 u, float32 v);
-	void texcoord1(float32 u, float32 v);
-	void texcoord2(float32 u, float32 v);
-	void texcoord3(float32 u, float32 v);
-	const vec3 get_vertex(int32 index);
-	vec2 get_vertex2(int32 index);
-	vec3 get_normal(int32 index);
-	vec2 get_texcoord(int32 index, int32 texture_index = 0);
-	void colour(pixel32 c);
-	void colour(float32 r, float32 g, float32 b, float32 a);
-	// void colour(RGBAf c);
-	void point(float32 x1, float32 y1, pixel32 colour);
-	void line(float32 x1, float32 y1, float32 x2, float32 y2, pixel32 colour);
-	void line(float32 x1, float32 y1, float32 x2, float32 y2, pixel32 colours[2]);
-	void rect(float32 x1, float32 y1, float32 width, float32 height, pixel32 colour);
-	void rect(float32 x1, float32 y1, float32 width, float32 height, pixel32 colours[4]);
-	void circle(float32 x, float32 y, float32 radius, pixel32 colour, int32 numsegments);
-	void ellipse(float32 x, float32 y, float32 width, float32 height, pixel32 ccolour, int32 numsegments);
-	void triangle(float32 x1, float32 y1, float32 x2, float32 y2, float32 x3, float32 y3, pixel32 colours[3]);
-	void quad(vec3 p1, vec3 p2, vec3 p3, vec3 p4);
-	void quadratic_bezier(vec2 startpos, vec2 controlpos, vec2 endpos, int32_t numseg);
-	void draw_sphere_patch(float32 slon, float32 slat,
-						   float32 elon, float32 elat,
-						   int subdivide, int ysubdivide,
-						   float32 radius, float32 texture_width, float32 texture_height);
-	void sphere(float32 radius, float32 texture_width, float32 texture_height);
-	// std::vector<Line3<float32> > get_lines();
-	void alphasort();
-	void build();
-	void draw();
-	void reset();
-	void begin(GLenum type);
-	void end();
-	void begin_quads();
-	void begin_triangles();
-	void begin_lines();
-	vec3 *vertex_pointer(int32 index);
-	vec3 *normal_pointer(int32 index);
-	vec4 *colour_pointer(int32 index);
-	vec2 *texcoord0_pointer(int32 index);
-	vec2 *texcoord1_pointer(int32 index);
-	vec2 *texcoord2_pointer(int32 index);
-	vec2 *texcoord3_pointer(int32 index);
-	void set_active_texture_unit(int32 unit);
-	int32 get_active_texture_unit();
-	void bind_tex0(int32 gl) { tex0_glref = gl; }
-	void bind_tex1(int32 gl) { tex1_glref = gl; }
-	void bind_tex2(int32 gl) { tex2_glref = gl; }
-	void bind_tex3(int32 gl) { tex3_glref = gl; }
 
-	GLenum primitive;
-	GLenum usage;
-	vec3 current_vertex;
-	vec3 current_normal;
-	vec4 current_colour;
-	vec2 current_texcoord0;
-	vec2 current_texcoord1;
-	vec2 current_texcoord2;
-	vec2 current_texcoord3;
-
-	GLuint vbo_id = 0;
-	uint64 vert_offset = 0;
-	uint64 norm_offset = 0;
-	uint64 col_offset = 0;
-	uint64 tex0_offset = 0;
-	uint64 tex1_offset = 0;
-	uint64 tex2_offset = 0;
-	uint64 tex3_offset = 0;
-	int32 active_texture_unit = 0;
-	std::vector<vec3> vertices;
-	std::vector<vec3> normals;
-	std::vector<vec4> colours;
-	std::vector<vec2> vtexcoord0;
-	std::vector<vec2> vtexcoord1;
-	std::vector<vec2> vtexcoord2;
-	std::vector<vec2> vtexcoord3;
-
-	int32 tex0_glref = 0;
-	int32 tex1_glref = 0;
-	int32 tex2_glref = 0;
-	int32 tex3_glref = 0;
-	vec2 offset2d{0.0f, 0.0f};
-	vec3 offset3d{0.0f, 0.0f, 0.0f};
-	bool vbo_deleted{false};
+struct vertexdata {
+	vec3 position;
+	vec3 normal;
+	rgba colour;
+	vec2 texture_coordinates;
 };
+
+struct drawbuffer
+{
+    vec3 *vertices{nullptr};
+    vec3 *normals{nullptr};
+    rgba *colours{nullptr};
+    vec2 *texture_coordinates{nullptr};
+
+    vec3 current_vertex;
+    vec3 current_normal;
+    rgba current_colour;
+    vec2 current_texture_coordinate;
+    uint32 array_capacity{0};
+    uint32 array_index{0};
+    uint32 glref{0};
+	int32 primitive{0};
+	int32 tex0_glref{0};
+	int32 tex1_glref{0};
+	int32 tex2_glref{0};
+	int32 tex3_glref{0};
+    uint64 vert_offset{0};
+    uint64 norm_offset{0};
+    uint64 col_offset{0};
+    uint64 tex0_offset{0};
+    uint64 tex1_offset{0};
+    uint64 tex2_offset{0};
+    uint64 tex3_offset{0};
+};
+
 
 struct framebuffer
 {
@@ -183,6 +130,7 @@ struct context
 };
 
 
+
 //
 // audio handling
 //
@@ -193,7 +141,11 @@ int32 init_sound();
 void deinit_sound();
 
 
-
+//
+// Memory
+//
+void *global_alloc(const uint32 numbytes);
+void global_free(void *pointer);
 
 //
 // Screen and IO Handling
@@ -201,32 +153,97 @@ void deinit_sound();
 
 
 // context
-int32 create_context(context **ctx, const std::string &titletext);
-int32 destroy_context(context **ctx);
+int32 create_fullscreen_context(context **ctx, const std::string &titletext);
+int32 create_windowed_context(context** ctx, int32 width, int32 height, const std::string& titletext);
+
+void destroy_context(context **ctx);
 
 // texture
 int32 create_texture(texture **tex, int32 width, int32 height, const bool mipmapped = true);
 int32 create_texture(texture **tex, const std::string &filename, const bool mipmapped = true);
 void destroy_texture(texture **tex);
+int32 save_texture(texture *tex, const std::string &filename);
 
-// drawbuffer
+// Software Drawing
+int32 putpixel(texture *pixelbuffer, ivec2 p, pixel32 colour);
+int32 getpixel(texture *pixelbuffer, ivec2 p, pixel32 &colour);
+int32 line(texture *pixelbuffer, ivec2 p1, ivec2 p2, pixel32 colour1, pixel32 colour2);
+int32 rectangle(texture *pixelbuffer, ivec2 p, int32 width, int32 height,
+	pixel32 colour1,pixel32 colour2, pixel32 colour3, pixel32 colour4);
+int32 triangle(texture *pixelbuffer, ivec2 p1,ivec2 p2,ivec2 p3,
+    pixel32 colour1,pixel32 colour2, pixel32 colour3);
+int32 clear(texture *pixelbuffer, pixel32 colour);
+int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin,ivec2 source_origin, int32 width, int32 height);
+
+
+//
+// GPU Drawing
+//
+
 int32 create_drawbuffer(drawbuffer **db);
-void destroy_drawbuffer(drawbuffer **db);
+int32 destroy_drawbuffer(drawbuffer **db);
+void begin_triangles(drawbuffer *db);
+void begin_quads(drawbuffer *db);
+void begin_lines(drawbuffer *db);
+void end_triangles(drawbuffer *db);
+void end_quads(drawbuffer *db);
+void end_lines(drawbuffer *db);
+void vertex(drawbuffer *db, vec3 vtx);
+void normal(drawbuffer *db, vec3 nml);
+void texture_coordinate(drawbuffer *db, vec2 tc);
+void colour(drawbuffer *db, pixel32 colour);
+void colour(drawbuffer *db, rgba colour);
+void draw(drawbuffer *db);
+void reset(drawbuffer *db);
 
+void rectangle(drawbuffer *db, vec2 position, float32 width, float32 height, pixel32 colour);
+void rectangle(drawbuffer *db, float32 x,float32 y,float32 width,float32 height,pixel32 colour);
+void triangle(drawbuffer *db, vec3 v1,vec3 v2, vec3 v4, pixel32 colour);
+void quad(drawbuffer *db, vec3 v1, vec3 v2, vec3 v3, vec3 v4, pixel32 colour1,pixel32 colour2, pixel32 colour3, pixel32 colour4);
+
+
+void quad(drawbuffer *db, vertexdata v1, vertexdata v2,vertexdata v3, vertexdata v4);
+void triangle(drawbuffer *db, vertexdata v1,vertexdata v2,vertexdata v3);
+
+
+
+
+//
 // framebuffer
+//
 int32 create_framebuffer(framebuffer **fb, int32 width, int32 height);
 void destroy_framebuffer(framebuffer **fb);
 void bind_framebuffer(framebuffer *fb);
 void unbind_framebuffer(framebuffer *fb);
 
+//
+// texture atlas
+//
 int32 create_atlas(textureatlas **atlas, drawbuffer *target, const std::string &filename, int32 numx, int32 numy);
-int32 destroy_atlas(textureatlas **atlas);
+int32 create_atlas(textureatlas **atlas, drawbuffer *target, int32 width, int32 height, int32 numx, int32 numy);
+void destroy_atlas(textureatlas **atlas);
 void bind_atlas(textureatlas *atlas);
 void begin_atlas(textureatlas *atlas);
 void draw_atlas_tile(textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
 void draw_atlas_tile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
 void end_atlas(textureatlas *atlas);
 
+//
+// Texture Atlas Software Drawing
+//
+int32 putpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 colour);
+int32 getpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 &colour);
+int32 line(textureatlas *atlas, ivec2 p1, ivec2 p2, int32 index, pixel32 colour1, pixel32 colour2);
+int32 rectangle(textureatlas *atlas, ivec2 p, int32 width, int32 height, int32 index,
+	pixel32 colour1,pixel32 colour2, pixel32 colour3, pixel32 colour4);
+int32 triangle(textureatlas *atlas, ivec2 p1,ivec2 p2,ivec2 p3, int32 index,
+    pixel32 colour1,pixel32 colour2, pixel32 colour3);
+int32 clear(textureatlas *atlas, int32 index, pixel32 colour);
+
+// graphics pipeline state
+void clear_screen();
+void clear_screen(pixel32 colour);
+void set_clear_colour(pixel32 colour);
 void enable_multisampling();
 void disable_multisampling();
 void enable_texturing();
@@ -241,28 +258,26 @@ void enable_texture_filtering();
 void disable_texture_filtering();
 void enable_blending();
 void disable_blending();
-
 void texture_gpu_write(texture *tex);
 void texture_gpu_read(texture *tex);
 void texture_bind(texture *tex);
-
 void texture_unbind();
-
-
 void disable_depthtest();
 void enable_depthtest();
-void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z);
-bool want_to_quit(context *ctx);
-void app_quit(context *ctx);
 void swap(context *ctx);
+
+void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z);
+
+
+
+
 void poll_input(context *ctx);
 void process_input(context *ctx);
-void clear_screen();
-void clear_screen(pixel32 colour);
-void set_clear_colour(pixel32 colour);
-const float64 get_frame_delta_t_ms();
 
-// free form drawing
+
+//
+// texture drawing. software
+//
 void end_quads(drawbuffer *target);
 void begin_quads(drawbuffer *target);
 void draw_rectangle(drawbuffer *target,
@@ -273,6 +288,19 @@ void bind_texture(drawbuffer *db, texture *tex);
 void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 colour = x11colours::white);
 void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 colour, const char* fmt, ...);
 
+//
 // keyboard  -- experimental api atm
+//
 void keyboard_install(context *ctx);
 uint32 getkey(uint32 k); // very very temporary...
+vec2 get_mouse_position();
+
+//
+// Utility
+//
+bool want_to_quit(context *ctx);
+void app_quit(context *ctx);
+const float64 get_frame_delta_t_ms();
+
+char* load_text_file(const char* filename, int32& num_bytes_read);
+int32 string_split_c(const char* txt, char delim, char*** tokens);

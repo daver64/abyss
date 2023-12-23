@@ -38,6 +38,17 @@ typedef uint32_t pixel32;
 typedef float float32;
 typedef double float64;
 
+#define ERROR_CREATE_DRAWBUFFER_DRAWBUFFER (-1)
+#define ERROR_CREATE_DRAWBUFFER_VERTICES (-2)
+#define ERROR_CREATE_DRAWBUFFER_NORMALS (-3)
+#define ERROR_CREATE_DRAWBUFFER_COLOURS (-4)
+#define ERROR_CREATE_DRAWBUFFER_TEXTURECOORDS (-5)
+#define ERROR_CREATE_DRAWBUFFER_GLREF (-6)
+#define CREATE_DRAWBUFFER_NO_ERROR (0)
+#define DESTROY_DRAWBUFFER_NO_ERROR (0)
+
+
+#define sgn(x) ((x<0)?-1:((x>0)?1:0))
 #define argb(a,r,g,b) ( ((uint32)(a)<<24) |		\
 			((((uint32)r)<<24)>>8) |	\
 			((((uint32)g)<<24)>>16) |	\

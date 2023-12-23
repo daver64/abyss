@@ -29,7 +29,7 @@ void update_and_render(const float64 delta_t_ms)
 	static float32 pxpos = 10.0f;
 	ypos -= 4.0f;
 	pxpos +=1.0f;
-	draw_rectangle(db, xpos, ypos, 24.0f, 24.0f, x11colours::white);
+	rectangle(db, xpos, ypos, 24.0f, 24.0f, x11colours::white);
 	if (ypos < 10 && pxpos<350)
 	{
 		ypos=300.0f;
@@ -44,7 +44,7 @@ void update_and_render(const float64 delta_t_ms)
 
 	bind_texture(db,sprite1);
 	begin_quads(db);
-	draw_rectangle(db,pxpos,300,32,32,x11colours::white);
+	rectangle(db,pxpos,300,32,32,x11colours::white);
 	end_quads(db);
 
 	gprintf(atlas,0,0,x11colours::green,"frame delta t ms=%2.2lf, raw getkey=%d",get_frame_delta_t_ms(),getkey(0));
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
 void app_init()
 {
-	create_context(&app_context, "Abyss");
+	create_windowed_context(&app_context,900,600, "Abyss");
 	create_texture(&logo, "../data/textures/beams.png");
 	create_texture(&sprite1,"../data/textures/red1.png");
 	create_drawbuffer(&db);

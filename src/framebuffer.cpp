@@ -17,7 +17,7 @@
 
 int32 create_framebuffer(framebuffer **fb, int32 width, int32 height)
 {
-    (*fb) = new framebuffer;
+	(*fb) = (framebuffer*)global_alloc(sizeof(framebuffer));// new framebuffer;
     (*fb)->width=width;
     (*fb)->height=height;
     glEnable(GL_TEXTURE_2D);
@@ -48,7 +48,8 @@ void destroy_framebuffer(framebuffer **fb)
 {
 	glDeleteFramebuffers(1, &(*fb)->frame_id);
 	glDeleteFramebuffers(1, &(*fb)->render_id);
-	delete (*fb);
+	//delete (*fb);
+	global_free(*fb);
     (*fb)=nullptr;
 }
 void bind_framebuffer(framebuffer *fb)

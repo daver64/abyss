@@ -1,11 +1,11 @@
-# abyss
+# Abyss
 Experimental cross-platform game framework.
 
-# dependencies
+# Dependencies
 This project depends on GLFW and OpenGL. Other minor dependencies
 are included in the source tree.
 
-#compiling
+# Compiling
 Download somewhere. Then...
 
 `cd wherever-you-put-it`\

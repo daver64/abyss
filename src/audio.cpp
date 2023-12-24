@@ -19,12 +19,12 @@ ma_engine_config config;
 int32 create_soundobject(soundobject **sobj, const std::string &filename)
 {
     assert(engine);
-    (*sobj) = (soundobject *)global_alloc(sizeof(soundobject));
+    (*sobj) = (soundobject *)global_alloc(sizeof(soundobject),"sound object");
     if(!(*sobj))
     {
         return ERROR_CREATE_SOUNDOBJECT_ALLOC;
     }
-    (*sobj)->sound = (ma_sound *)global_alloc(sizeof(ma_sound));
+    (*sobj)->sound = (ma_sound *)global_alloc(sizeof(ma_sound),"sound object sound");
     if(!(*sobj)->sound)
     {
         global_free((*sobj));
@@ -69,7 +69,7 @@ int32 play_sound(soundobject *sobj)
 
 int32 init_sound()
 {
-    engine = (ma_engine*)global_alloc(sizeof(ma_engine));//new ma_engine;
+    engine = (ma_engine*)global_alloc(sizeof(ma_engine),"sound engine object");//new ma_engine;
     config = ma_engine_config_init();
     ma_result result = ma_engine_init(&config, engine);
     if (result != MA_SUCCESS)

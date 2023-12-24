@@ -15,18 +15,18 @@
 
 int32 create_array_buffer(array_buffer **db)
 {
-    (*db) = (array_buffer *)global_alloc(sizeof(array_buffer));
+    (*db) = (array_buffer *)global_alloc(sizeof(array_buffer),"array buffer object");
     if (!(*db))
         return ERROR_CREATE_DRAWBUFFER_DRAWBUFFER;
 
-    (*db)->vertices = (vec3 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec3));
+    (*db)->vertices = (vec3 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec3),"array buffer vertex storage");
     if (!(*db)->vertices)
     {
         global_free((*db));
         (*db) = nullptr;
         return ERROR_CREATE_DRAWBUFFER_VERTICES;
     }
-    (*db)->normals = (vec3 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec3));
+    (*db)->normals = (vec3 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec3),"array buffer normal storage");
     if (!(*db)->normals)
     {
         global_free((*db)->vertices);
@@ -34,7 +34,7 @@ int32 create_array_buffer(array_buffer **db)
         (*db) = nullptr;
         return ERROR_CREATE_DRAWBUFFER_NORMALS;
     }
-    (*db)->colours = (rgba *)global_alloc(MAX_BUFFER_VERTICES * sizeof(rgba));
+    (*db)->colours = (rgba *)global_alloc(MAX_BUFFER_VERTICES * sizeof(rgba),"array buffer colour storage");
     if (!(*db)->colours)
     {
         global_free((*db)->vertices);
@@ -43,7 +43,7 @@ int32 create_array_buffer(array_buffer **db)
         (*db) = nullptr;
         return ERROR_CREATE_DRAWBUFFER_COLOURS;
     }
-    (*db)->texture_coordinates = (vec2 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec2));
+    (*db)->texture_coordinates = (vec2 *)global_alloc(MAX_BUFFER_VERTICES * sizeof(vec2),"array buffer texture coordinate storage");
     if (!(*db)->texture_coordinates)
     {
         global_free((*db)->vertices);

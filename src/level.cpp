@@ -9,11 +9,11 @@ int32 create_level(gamelevel **level, array_buffer *targetbuffer, textureatlas *
 {
 	assert(width >= 0 && width <= 4096);
 	assert(height >= 0 && height <= 4096);
-	(*level) = (gamelevel*)global_alloc(sizeof(gamelevel));
-	(*level)->entities=(gameentity*)global_alloc(sizeof(gameentity) * 1024);
+	(*level) = (gamelevel*)global_alloc(sizeof(gamelevel),"game level object");
+	(*level)->entities=(gameentity*)global_alloc(sizeof(gameentity) * 1024,"game entity memory");
 	(*level)->entity_capacity=1024;
 	(*level)->entity_count=0;
-	(*level)->tiles = (gametile*)global_alloc(sizeof(gametile) * width * height);
+	(*level)->tiles = (gametile*)global_alloc(sizeof(gametile) * width * height,"game tile memory");
 	(*level)->width = width;
 	(*level)->height = height;
 	(*level)->tileatlas = atlas;

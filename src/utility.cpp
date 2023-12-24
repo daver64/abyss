@@ -10,26 +10,53 @@ static uint64 global_num_allocations{0};
 
 #include <list>
 #include <algorithm>
-std::list<void *> global_allocs;
+
+struct memory_block
+{
+	void *block_pointer;
+	uint32 size;
+	char *description;
+};
+
+std::list<memory_block> global_allocs;
 
 bool is_globally_alloced(void *block)
 {
-	auto b = std::find(std::begin(global_allocs), std::end(global_allocs), block);
-	if (b != global_allocs.end())
-		return true;
+	for(auto mb : global_allocs)
+	{
+		if(mb.block_pointer==block)
+			return true;
+	}
 	return false;
 }
-void add_to_alloced_list(void *block)
+bool get_global_block(void *pointer, memory_block &block)
+{
+	for(auto mb : global_allocs)
+	{
+		if(mb.block_pointer==pointer)
+		{
+			block=mb;
+			return true;
+		}
+	}
+	return false;
+}
+void add_to_alloced_list(memory_block block)
 {
 	global_allocs.push_front(block);
 }
 
-void remove_from_alloced_list(void *block)
+void remove_from_alloced_list(memory_block block)
 {
-	if (is_globally_alloced(block))
+	std::list<memory_block> kept_blocks;
+	for(auto b : global_allocs)
 	{
-		global_allocs.remove(block);
+		if(b.block_pointer!=block.block_pointer)
+		{
+			kept_blocks.emplace_back(b);
+		}
 	}
+	global_allocs.swap(kept_blocks);
 }
 
 void dump_global_allocs()
@@ -38,11 +65,18 @@ void dump_global_allocs()
 	for (auto block : global_allocs)
 	{
 #ifdef _WIN32
-		blocksize = _msize(block);
+		blocksize = _msize(block.block_pointer);
 #else
 		blocksize = malloc_usable_size(block);
 #endif
-		fprintf(stderr, "global block %p : size=%zu\n", block, blocksize);
+		if(block.description)
+		{
+			fprintf(stderr, "global block %p : size=%u : %s\n", block.block_pointer, block.size,block.description);
+		}
+		else
+		{
+			fprintf(stderr, "global block %p : size=%u \n", block.block_pointer, block.size);
+		}
 	}
 }
 void global_free(void *block)
@@ -58,13 +92,16 @@ void global_free(void *block)
 #endif
 	global_alloc_total_bytes -= block_size;
 	global_num_allocations--;
-	// fprintf(stderr, "global free #%zu::%p::%zu bytes\n",
-	//		global_num_allocations, block, block_size);
-	remove_from_alloced_list(block);
+
+	memory_block global_block;
+	if(get_global_block(block,global_block))
+	{
+		remove_from_alloced_list(global_block);
+	}
 	free(block);
 }
 
-void *global_alloc(const uint32 requested_numbytes)
+void *global_alloc(const uint32 requested_numbytes,const char *description)
 {
 	void *block = malloc(requested_numbytes);
 	assert(block);
@@ -77,9 +114,19 @@ void *global_alloc(const uint32 requested_numbytes)
 #endif
 	global_alloc_total_bytes += num_usable_bytes;
 	global_num_allocations++;
-	// fprintf(stderr, "global alloc #%zu::%p::%zu bytes\n",
-	//		global_num_allocations, block, num_usable_bytes);
-	add_to_alloced_list(block);
+
+	memory_block memblock;
+	memblock.block_pointer=block;
+	memblock.size=num_usable_bytes;
+	if(description!=nullptr)
+	{
+		memblock.description=strdup(description);
+	}
+	else
+	{
+		memblock.description=nullptr;
+	}
+	add_to_alloced_list(memblock);
 	return block;
 }
 

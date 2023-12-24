@@ -144,7 +144,7 @@ void deinit_sound();
 //
 // Memory
 //
-void *global_alloc(const uint32 numbytes);
+void *global_alloc(const uint32 numbytes,const char* description=nullptr);
 void global_free(void *pointer);
 void dump_global_allocs();
 

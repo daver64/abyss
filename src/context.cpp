@@ -44,7 +44,7 @@ int32 create_fullscreen_context(context** ctx, const std::string& titletext)
     glfwSetErrorCallback(glfw_error_callback);
     glfwInit();
 
-    *ctx = (context*)global_alloc(sizeof(context));
+    *ctx = (context*)global_alloc(sizeof(context),"simlib context object");
     (*ctx)->fullscreen = true;
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -97,7 +97,7 @@ int32 create_windowed_context(context** ctx, int32 width, int32 height, const st
     glfwSetErrorCallback(glfw_error_callback);
     glfwInit();
 
-    *ctx = (context*)global_alloc(sizeof(context));
+    *ctx = (context*)global_alloc(sizeof(context),"simlib windowed context object");
     (*ctx)->fullscreen = false;
 
     (*ctx)->width = width;

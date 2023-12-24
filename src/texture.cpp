@@ -25,10 +25,10 @@ int32 save_texture(texture *tex, const std::string &filename)
 int32 create_texture(texture **tex, int32 width, int32 height, const bool mipmapped)
 {
     int32 result = 0;
-    (*tex) = (texture*)global_alloc(sizeof(texture));
+    (*tex) = (texture*)global_alloc(sizeof(texture),"texture object");
     if ((*tex))
     {
-        (*tex)->pixels = (pixel32*)global_alloc(width * height * sizeof(pixel32));
+        (*tex)->pixels = (pixel32*)global_alloc(width * height * sizeof(pixel32),"texture pixel data");
         (*tex)->ref = 0;
         (*tex)->width = width;
         (*tex)->height = height;
@@ -50,11 +50,12 @@ int32 create_texture(texture **tex, int32 width, int32 height, const bool mipmap
 int32 create_texture(texture **tex, const std::string &filename, const bool mipmapped)
 {
     int32 result = 0;
-    (*tex) = (texture*)global_alloc(sizeof(texture));
+    std::string description="texture object file='"+filename+std::string("'");
+    (*tex) = (texture*)global_alloc(sizeof(texture),description.c_str());
     pixel32 *tmp_pix = (pixel32 *)stbi_load(filename.c_str(), &(*tex)->width, &(*tex)->height, 0, 4);
     if (tmp_pix)
     {
-        (*tex)->pixels = (pixel32*)global_alloc((*tex)->width * (*tex)->height * sizeof(pixel32));
+        (*tex)->pixels = (pixel32*)global_alloc((*tex)->width * (*tex)->height * sizeof(pixel32),"texture pixel data");
         memcpy((*tex)->pixels, tmp_pix, (*tex)->width * (*tex)->height * sizeof(pixel32));
         stbi_image_free((void *)tmp_pix);
         glEnable(GL_TEXTURE_2D);
@@ -108,7 +109,8 @@ void texture_unbind()
 
 int32 create_atlas(textureatlas **atlas,array_buffer *target,const std::string& filename,int32 numx,int32 numy)
 {
-    (*atlas) = (textureatlas*)global_alloc(sizeof(textureatlas));
+    std::string description=std::string("texture atlas object file='")+filename+std::string("'");
+    (*atlas) = (textureatlas*)global_alloc(sizeof(textureatlas),description.c_str());
     (*atlas)->numtiles_x=numx;
     (*atlas)->numtiles_y=numy;
     (*atlas)->target = target;
@@ -119,7 +121,7 @@ int32 create_atlas(textureatlas **atlas,array_buffer *target,const std::string& 
 }
 int32 create_atlas(textureatlas **atlas, array_buffer *target, int32 width, int32 height, int32 numx, int32 numy)
 {
-    (*atlas) = (textureatlas*)global_alloc(sizeof(textureatlas));
+    (*atlas) = (textureatlas*)global_alloc(sizeof(textureatlas),"texture atlas object");
     (*atlas)->numtiles_x=numx;
     (*atlas)->numtiles_y=numy;
     (*atlas)->target = target;

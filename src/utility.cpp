@@ -136,7 +136,7 @@ void sleep_in_ms(uint32 ms)
 	ts.tv_nsec = ms % 1000 * 1000000;
 	while(nanosleep(&ts,&ts)==-1 && errno==EINTR);
 }
-void sleep_in_ms(uint32 ms)
+void sleep_in_us(uint32 us)
 {
 	struct timespec ts;
 	ts.tv_sec = us /1000000;

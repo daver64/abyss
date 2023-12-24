@@ -88,6 +88,7 @@ void app_init()
 	//play_sound(music);
 
 	create_level(&level,db,tileatlas,80,25);
+	dump_global_allocs();
 }
 
 void app_shutdown()

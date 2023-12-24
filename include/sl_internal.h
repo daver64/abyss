@@ -37,6 +37,7 @@ typedef uint64_t uint64;
 typedef uint32_t pixel32;
 typedef float float32;
 typedef double float64;
+typedef unsigned char ubyte;
 
 #define ERROR_CREATE_DRAWBUFFER_DRAWBUFFER (-1)
 #define ERROR_CREATE_DRAWBUFFER_VERTICES (-2)

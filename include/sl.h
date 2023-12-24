@@ -146,6 +146,7 @@ void deinit_sound();
 //
 void *global_alloc(const uint32 numbytes);
 void global_free(void *pointer);
+void dump_global_allocs();
 
 //
 // Screen and IO Handling
@@ -217,7 +218,7 @@ void bind_framebuffer(framebuffer *fb);
 void unbind_framebuffer(framebuffer *fb);
 
 //
-// Aexture Atlas
+// Texture Atlas
 //
 int32 create_atlas(textureatlas **atlas, array_buffer *target, const std::string &filename, int32 numx, int32 numy);
 int32 create_atlas(textureatlas **atlas, array_buffer *target, int32 width, int32 height, int32 numx, int32 numy);
@@ -281,7 +282,12 @@ void process_input(context *ctx);
 void sleep_in_ms(uint32 ms);
 void sleep_in_us(uint32 us);
 
+//
+// RNG
+//
 
+int32 random_int(int32 start=INT32_MIN, int32 end=INT32_MAX);
+float32 random_float(float32 start=FLT_MIN, float32 end=FLT_MAX);
 
 //
 // texture drawing. software
@@ -310,8 +316,12 @@ bool want_to_quit(context *ctx);
 void app_quit(context *ctx);
 const float64 get_frame_delta_t_ms();
 
-char* load_text_file(const char* filename, int32& num_bytes_read);
-int32 string_split_c(const char* txt, char delim, char*** tokens);
+std::string load_text_file(const std::string &filename);
+std::vector<std::string> load_text_file_lines(const std::string &filename);
+ubyte *load_binary_file(const std::string &filename);
+std::vector<std::string> split_string(const std::string &str,const std::string &delims,
+	std::vector<std::string> &elems,bool skip_empty=true);
+
 
 //
 // GUI

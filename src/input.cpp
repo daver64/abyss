@@ -3,6 +3,26 @@
 #include "sl.h"
 
 uint32 keys[4] { 0,0,0,0};
+extern float64 frame_start_t_ms;
+void poll_input(context *ctx)
+{
+    frame_start_t_ms = glfwGetTime() * 1000.0;
+    glfwPollEvents();
+    if (glfwWindowShouldClose(ctx->window))
+    {
+        ctx->quit_requested = true;
+    }
+}
+
+void process_input(context *ctx)
+{
+    poll_input(ctx);
+    if (glfwGetKey(ctx->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        app_quit(ctx);
+        glfwSetWindowShouldClose(ctx->window, true);
+    }
+}
 
 uint32 getkey(uint32 k)
 {

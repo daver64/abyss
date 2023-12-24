@@ -1,18 +1,18 @@
 /***
-* Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
-* All rights reserved.
-*/
+ * Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
+ * All rights reserved.
+ */
 #include "sl.h"
 
 const float64 PI = 3.14159265358979323846264338327950288;
 const float64 TAU = 2.0 * PI;
 const float64 PIDIV2 = PI / 2.0;
-float64 ROUNDING_ERROR = std::numeric_limits<float64>::epsilon();
+const float64 ROUNDING_ERROR = std::numeric_limits<float64>::epsilon();
 
 const float32 PIf = 3.14159265358979323846;
 const float32 TAUf = 2.0f * PIf;
 const float32 PIDIV2f = PIf / 2.0f;
-float32 ROUNDING_ERRORf = std::numeric_limits<float32>::epsilon();
+const float32 ROUNDING_ERRORf = std::numeric_limits<float32>::epsilon();
 
 vec3 camera::forward_vector() const
 {
@@ -129,6 +129,27 @@ plane::~plane()
 {
 }
 
+EIntersectionRelation3D plane::classify_point_relation(
+    const vec3 &point) const
+{
+    const float32 d = glm::dot(normal, point) + D;
+    if (d < -ROUNDING_ERROR)
+        return ISREL3D_BACK;
+    if (d > ROUNDING_ERROR)
+        return ISREL3D_FRONT;
+    return ISREL3D_PLANAR;
+}
+void plane::set_plane(
+    const vec3 &point1, const vec3 &point2, const vec3 &point3)
+{
+    normal = glm::cross((point2 - point1), (point3 - point1));
+    glm::normalize(normal);
+    recalculate(point1);
+}
+void plane::recalculate(const vec3 &point)
+{
+    D = glm::dot(point, normal);
+}
 void quadratic_plot(vec2 startpos, vec2 controlpos, vec2 endpos, std::vector<vec2> &plotresult, int32 numsegments)
 {
     for (int32 i = 0; i <= numsegments; ++i)

@@ -8,12 +8,12 @@
 extern const float64 PI;
 extern const float64 TAU;
 extern const float64 PIDIV2;
-extern float64 ROUNDING_ERROR;
+extern const float64 ROUNDING_ERROR;
 
 extern const float32 PIf;
 extern const float32 TAUf;
 extern const float32 PIDIV2f;
-extern float32 ROUNDING_ERRORf;
+extern const float32 ROUNDING_ERRORf;
 
 //inline float32 lerp(float32 v1, float32 v2, float32 a) { return (v1 * (1.0f - a) + v2 * a); }
 //inline float64 lerp(float64 v1, float64 v2, float64 a) { return (v1 * (1.0 - a) + v2 * a); }
@@ -68,29 +68,10 @@ public:
 	plane();
 	~plane();
 	EIntersectionRelation3D classify_point_relation(
-		const vec3 &point) const
-	{
-		const float32 d = glm::dot(normal, point) + D;
-		if (d < -ROUNDING_ERROR)
-			return ISREL3D_BACK;
-		if (d > ROUNDING_ERROR)
-			return ISREL3D_FRONT;
-		return ISREL3D_PLANAR;
-	}
+		const vec3 &point) const;
 	void set_plane(
-		const vec3 &point1, const vec3 &point2, const vec3 &point3)
-	{
-		// normal = (point2 - point1).cross(point3 - point1);
-		normal = glm::cross((point2 - point1), (point3 - point1));
-		// normal.normalise();
-		glm::normalize(normal);
-		recalculate(point1);
-	}
-	void recalculate(const vec3 &point)
-	{
-		// D = -point.dot(normal);
-		D = glm::dot(point, normal);
-	}
+		const vec3 &point1, const vec3 &point2, const vec3 &point3);
+	void recalculate(const vec3 &point);
 	vec3 normal;
 	float32 D;
 };

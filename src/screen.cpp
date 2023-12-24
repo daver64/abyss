@@ -6,8 +6,8 @@
 #include "stb_image.h"
 #include "sl.h"
 
-static float64 frame_delta_t_ms = 16.0;
-static float64 frame_start_t_ms = 0.0;
+float64 frame_delta_t_ms = 16.0;
+float64 frame_start_t_ms = 0.0;
 
 void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z)
 {
@@ -22,17 +22,6 @@ void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z
     glLoadIdentity();
 }
 
-bool want_to_quit(context *ctx)
-{
-    assert(ctx);
-    return ctx->quit_requested;
-}
-
-void app_quit(context *ctx)
-{
-    assert(ctx);
-    ctx->quit_requested = true;
-}
 
 #define NUM_TIME_SAMPLES 8
 float64 average_frame_delta_t_ms{0.0};
@@ -62,25 +51,7 @@ const float64 get_frame_delta_t_ms()
 
     return result;
 }
-void poll_input(context *ctx)
-{
-    frame_start_t_ms = glfwGetTime() * 1000.0;
-    glfwPollEvents();
-    if (glfwWindowShouldClose(ctx->window))
-    {
-        ctx->quit_requested = true;
-    }
-}
 
-void process_input(context *ctx)
-{
-    poll_input(ctx);
-    if (glfwGetKey(ctx->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
-        app_quit(ctx);
-        glfwSetWindowShouldClose(ctx->window, true);
-    }
-}
 
 void clear_screen()
 {

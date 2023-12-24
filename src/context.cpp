@@ -77,12 +77,6 @@ int32 create_fullscreen_context(context** ctx, const std::string& titletext)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window,cursor_position_callback);
     glfwSwapInterval(1);
-    glEnable(GL_MULTISAMPLE);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_NORMALIZE);
-    glShadeModel(GL_SMOOTH);
 
     GLFWimage images[2];
     images[0].pixels = stbi_load("../data/textures/bud.png", &images[0].width, &images[0].height, 0, 4);
@@ -130,12 +124,7 @@ int32 create_windowed_context(context** ctx, int32 width, int32 height, const st
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window,cursor_position_callback);
     glfwSwapInterval(1);
-    glEnable(GL_MULTISAMPLE);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_NORMALIZE);
-    glShadeModel(GL_SMOOTH);
 
     GLFWimage images[2];
     images[0].pixels = stbi_load("../data/textures/bud.png", &images[0].width, &images[0].height, 0, 4);
@@ -157,3 +146,16 @@ void destroy_context(context **ctx)
     glfwTerminate();
     deinit_sound();
 }
+
+bool want_to_quit(context *ctx)
+{
+    assert(ctx);
+    return ctx->quit_requested;
+}
+
+void app_quit(context *ctx)
+{
+    assert(ctx);
+    ctx->quit_requested = true;
+}
+

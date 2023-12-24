@@ -34,7 +34,7 @@ void draw_gui()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Some Window");
+    ImGui::Begin("Some Window",nullptr,ImGuiWindowFlags_NoSavedSettings);
     ImGui::Text("Hello!");
     ImGui::End();
     ImGui::Render();

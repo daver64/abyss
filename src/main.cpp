@@ -49,9 +49,7 @@ void update_and_render(const float64 delta_t_ms)
 
 	gprintf(atlas,0,0,x11colours::green,"frame delta t ms=%2.0lf, raw getkey=%d",
 		std::floor(get_frame_delta_t_ms()),getkey(0));
-	// bitmapped font plain text output.
-	//gprintf(atlas, 64, 96, x11colours::tomato, "hello %d bit world.\tafter tab.\nanother line\n%2.2lf",
-	//		getkey(0), get_frame_delta_t_ms());
+
 }
 
 int main(int argc, char *argv[])
@@ -101,5 +99,6 @@ void app_shutdown()
 	destroy_texture(&sprite1);
 	destroy_soundobject(&music);
 	destroy_soundobject(&sfx1);
+	deinit_gui();
 	destroy_context(&app_context);
 }

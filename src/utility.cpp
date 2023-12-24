@@ -103,3 +103,44 @@ int32 string_split_c(const char* txt, char delim, char*** tokens)
     global_free(tklen);
 	return count;
 }
+
+// Timing
+#ifdef _WIN32
+#include <windows.h>
+void sleep_in_ms(uint32 ms)
+{
+	sleep_in_us(ms * 1000);
+}
+static HANDLE timer;
+static bool inited{false};
+void sleep_in_us(uint32 us)
+{
+	LARGE_INTEGER ft;
+	ft.QuadPart = -(int64)(us * 10);
+	if(!inited)
+	{
+		timer=CreateWaitableTimer(nullptr,TRUE,nullptr);
+		inited=true;
+	}
+	SetWaitableTimer(timer,&ft,0,nullptr,nullptr,0);
+	WaitForSingleObject(timer,INFINITE);
+}
+
+#else
+#include <time.h>
+#include <errno.h>
+void sleep_in_ms(uint32 ms)
+{
+	struct timespec ts;
+	ts.tv_sec = ms / 1000;
+	ts.tv_nsec = ms % 1000 * 1000000;
+	while(nanosleep(&ts,&ts)==-1 && errno==EINTR);
+}
+void sleep_in_ms(uint32 ms)
+{
+	struct timespec ts;
+	ts.tv_sec = us /1000000;
+	ts.tv_nsec = us % 1000000 * 1000;
+	while(nanosleep(&ts,&ts)==-1 && errno==EINTR);
+}
+#endif

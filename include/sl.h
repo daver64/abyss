@@ -274,6 +274,14 @@ void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z
 void poll_input(context *ctx);
 void process_input(context *ctx);
 
+//
+// Timing
+//
+
+void sleep_in_ms(uint32 ms);
+void sleep_in_us(uint32 us);
+
+
 
 //
 // texture drawing. software

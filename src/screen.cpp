@@ -22,8 +22,6 @@ void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z
     glLoadIdentity();
 }
 
-
-
 bool want_to_quit(context *ctx)
 {
     assert(ctx);
@@ -100,8 +98,8 @@ void clear_screen(pixel32 clearcolour)
 }
 void clear_screen(rgba clearcolour)
 {
-    glClearColor(clearcolour.r,clearcolour.g,clearcolour.b,clearcolour.a);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClearColor(clearcolour.r, clearcolour.g, clearcolour.b, clearcolour.a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 textcolour)
 {

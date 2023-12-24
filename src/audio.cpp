@@ -69,7 +69,7 @@ int32 play_sound(soundobject *sobj)
 
 int32 init_sound()
 {
-    engine = (ma_engine*)global_alloc(sizeof(ma_engine),"sound engine object");//new ma_engine;
+    engine = (ma_engine*)global_alloc(sizeof(ma_engine),"sound engine object");
     config = ma_engine_config_init();
     ma_result result = ma_engine_init(&config, engine);
     if (result != MA_SUCCESS)

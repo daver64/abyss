@@ -17,7 +17,7 @@
 
 int32 create_framebuffer(framebuffer **fb, int32 width, int32 height)
 {
-	(*fb) = (framebuffer *)global_alloc(sizeof(framebuffer), "framebuffer object"); // new framebuffer;
+	(*fb) = (framebuffer *)global_alloc(sizeof(framebuffer), "framebuffer object"); 
 	(*fb)->width = width;
 	(*fb)->height = height;
 	glEnable(GL_TEXTURE_2D);

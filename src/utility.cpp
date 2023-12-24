@@ -22,20 +22,20 @@ std::list<memory_block> global_allocs;
 
 bool is_globally_alloced(void *block)
 {
-	for(auto mb : global_allocs)
+	for (auto mb : global_allocs)
 	{
-		if(mb.block_pointer==block)
+		if (mb.block_pointer == block)
 			return true;
 	}
 	return false;
 }
 bool get_global_block(void *pointer, memory_block &block)
 {
-	for(auto mb : global_allocs)
+	for (auto mb : global_allocs)
 	{
-		if(mb.block_pointer==pointer)
+		if (mb.block_pointer == pointer)
 		{
-			block=mb;
+			block = mb;
 			return true;
 		}
 	}
@@ -49,9 +49,9 @@ void add_to_alloced_list(memory_block block)
 void remove_from_alloced_list(memory_block block)
 {
 	std::list<memory_block> kept_blocks;
-	for(auto b : global_allocs)
+	for (auto b : global_allocs)
 	{
-		if(b.block_pointer!=block.block_pointer)
+		if (b.block_pointer != block.block_pointer)
 		{
 			kept_blocks.emplace_back(b);
 		}
@@ -69,9 +69,9 @@ void dump_global_allocs()
 #else
 		blocksize = malloc_usable_size(block.block_pointer);
 #endif
-		if(block.description)
+		if (block.description)
 		{
-			fprintf(stderr, "global block %p : size=%u : %s\n", block.block_pointer, block.size,block.description);
+			fprintf(stderr, "global block %p : size=%u : %s\n", block.block_pointer, block.size, block.description);
 		}
 		else
 		{
@@ -94,14 +94,14 @@ void global_free(void *block)
 	global_num_allocations--;
 
 	memory_block global_block;
-	if(get_global_block(block,global_block))
+	if (get_global_block(block, global_block))
 	{
 		remove_from_alloced_list(global_block);
 	}
 	free(block);
 }
 
-void *global_alloc(const uint32 requested_numbytes,const char *description)
+void *global_alloc(const uint32 requested_numbytes, const char *description)
 {
 	void *block = malloc(requested_numbytes);
 	assert(block);
@@ -116,15 +116,15 @@ void *global_alloc(const uint32 requested_numbytes,const char *description)
 	global_num_allocations++;
 
 	memory_block memblock;
-	memblock.block_pointer=block;
-	memblock.size=num_usable_bytes;
-	if(description!=nullptr)
+	memblock.block_pointer = block;
+	memblock.size = num_usable_bytes;
+	if (description != nullptr)
 	{
-		memblock.description=strdup(description);
+		memblock.description = strdup(description);
 	}
 	else
 	{
-		memblock.description=nullptr;
+		memblock.description = nullptr;
 	}
 	add_to_alloced_list(memblock);
 	return block;
@@ -183,21 +183,22 @@ std::vector<std::string> load_text_file_lines(const std::string &filename)
 }
 
 std::vector<std::string> split_string(const std::string &str, const std::string &delims,
-									   std::vector<std::string> &elems, bool skip_empty )
+									  std::vector<std::string> &elems, bool skip_empty)
 {
-	std::string::size_type pos,prev=0;
-	while((pos=str.find_first_of(delims,prev))!=std::string::npos)
+	std::string::size_type pos, prev = 0;
+	while ((pos = str.find_first_of(delims, prev)) != std::string::npos)
 	{
-		if(pos>prev)
+		if (pos > prev)
 		{
-			if(skip_empty && 1==pos-prev) break;
-			elems.emplace_back(str,prev,pos-prev);
+			if (skip_empty && 1 == pos - prev)
+				break;
+			elems.emplace_back(str, prev, pos - prev);
 		}
-		prev=pos+1;
+		prev = pos + 1;
 	}
-	if(prev<str.size())
+	if (prev < str.size())
 	{
-		elems.emplace_back(str,prev,str.size()-prev);
+		elems.emplace_back(str, prev, str.size() - prev);
 	}
 	return std::move(elems);
 }

@@ -1,9 +1,9 @@
 /**
  * (c) 2023 David Rowbotham thedaver64@gmail.com
-*/
+ */
 #include <windows.h>
 #include "sl.h"
-//#define GLFW_INCLUDE_GLEXT
+// #define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 
 #include "sl_glext.h"

@@ -138,31 +138,31 @@ int32 clear(texture *pixelbuffer, pixel32 colour)
     }
     return 0;
 }
-int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin,ivec2 source_origin, int32 width, int32 height)
+int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin, ivec2 source_origin, int32 width, int32 height)
 {
     assert(destination);
     assert(source);
-    int32 numops=width*height;
-    ivec2 destination_coord=destination_origin;
-    ivec2 source_coord=source_origin;
-    for(int32 i=0;i<numops;i++)
+    int32 numops = width * height;
+    ivec2 destination_coord = destination_origin;
+    ivec2 source_coord = source_origin;
+    for (int32 i = 0; i < numops; i++)
     {
         pixel32 colour;
-        getpixel(source,source_coord,colour);
-        putpixel(destination,destination_coord,colour);
+        getpixel(source, source_coord, colour);
+        putpixel(destination, destination_coord, colour);
         source_coord.x++;
         destination_coord.x++;
-        if(source_coord.x-source_origin.x >= width)
+        if (source_coord.x - source_origin.x >= width)
         {
-            source_coord.x=source_origin.x;
-            destination_coord.x=destination_origin.x;
+            source_coord.x = source_origin.x;
+            destination_coord.x = destination_origin.x;
             source_coord.y++;
             destination_coord.y++;
         }
-        if(source_coord.y-source_origin.y>=height)
+        if (source_coord.y - source_origin.y >= height)
         {
-            source_coord.y=source_origin.y;
-            destination_coord.y=destination_origin.y;
+            source_coord.y = source_origin.y;
+            destination_coord.y = destination_origin.y;
         }
     }
     return 0;
@@ -200,7 +200,7 @@ int32 line(textureatlas *atlas, ivec2 p1, ivec2 p2, int32 index, pixel32 colour1
     const ivec2 pos2{tile_x + p2.x, tile_y + p2.y};
     return line(atlas->tex, pos1, pos2, colour1, colour2);
 }
-int32 rectangle(textureatlas *atlas, ivec2 p,  int32 width, int32 height,int32 index,
+int32 rectangle(textureatlas *atlas, ivec2 p, int32 width, int32 height, int32 index,
                 pixel32 colour1, pixel32 colour2, pixel32 colour3, pixel32 colour4)
 {
     ivec2 p1 = p;

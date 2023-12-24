@@ -1,7 +1,6 @@
 #define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 #include "sl.h"
-///#include "bluesteel.h"
 
 uint32 keys[4] { 0,0,0,0};
 

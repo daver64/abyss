@@ -1,2 +1,2 @@
 # abyss
-ascii character game.
+experimental windows/linux game framework.

@@ -6,7 +6,7 @@ static uint64 global_num_allocations{0};
 
 //#ifndef _WIN32
 #include <list>
-
+#include <algorithm>
 std::list<void*> global_allocs;
 
 bool is_globally_alloced(void *block)

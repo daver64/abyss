@@ -4,36 +4,67 @@
 static uint64 global_alloc_total_bytes{0};
 static uint64 global_num_allocations{0};
 
-void global_free(void *pointer)
+//#ifndef _WIN32
+#include <list>
+
+std::list<void*> global_allocs;
+
+bool is_globally_alloced(void *block)
 {
-    uint64 pointer_size{0};
+	auto b=std::find(std::begin(global_allocs),std::end(global_allocs),block);
+	if(b!=global_allocs.end())
+		return true;
+	return false;
+}
+void add_to_alloced_list(void *block)
+{
+	global_allocs.push_front(block);;
+}
+void remove_from_alloced_list(void *block)
+{
+	if(is_globally_alloced(block))
+	{
+		global_allocs.remove(block);
+	}
+}
+//#endif
+
+void global_free(void *block)
+{
+	assert(block);
+    uint64 block_size{0};
     #ifdef _WIN32
-    pointer_size = _msize(pointer);
+    block_size = _msize(block);
+	assert((int64)block_size!=-1);
     #else
-    pointer_size = malloc_usable_size(pointer);
+    block_size = malloc_usable_size(block);
+	assert(is_globally_alloced(block));
     #endif
-    global_alloc_total_bytes-=pointer_size;
+    global_alloc_total_bytes-=block_size;
     global_num_allocations--;
     fprintf(stderr,"global free #%zu::%p::%zu bytes\n",
-        global_num_allocations,pointer,pointer_size);
-    free(pointer);
+        global_num_allocations,block,block_size);
+    free(block);
+	remove_from_alloced_list(block);
 }
 
 void *global_alloc(const uint32 requested_numbytes)
 {
-    void *pointer = malloc(requested_numbytes);
-    memset(pointer,0,requested_numbytes);
+    void *block = malloc(requested_numbytes);
+	assert(block);
+    memset(block,0,requested_numbytes);
     uint64 num_usable_bytes{0};
     #ifdef _WIN32
-    num_usable_bytes=_msize(pointer);
+    num_usable_bytes=_msize(block);
     #else
-    num_usable_bytes=malloc_usable_size(pointer);
+    num_usable_bytes=malloc_usable_size(block);
     #endif
     global_alloc_total_bytes+=num_usable_bytes;
     global_num_allocations++;
     fprintf(stderr,"global alloc #%zu::%p::%zu bytes\n",
-        global_num_allocations,pointer,num_usable_bytes);
-    return pointer;
+        global_num_allocations,block,num_usable_bytes);
+	add_to_alloced_list(block);
+    return block;
 }
 
 char* load_text_file(const char* filename, int32& num_bytes_read)

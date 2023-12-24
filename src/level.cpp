@@ -9,13 +9,16 @@ int32 create_level(gamelevel **level, array_buffer *targetbuffer, textureatlas *
 {
 	assert(width >= 0 && width <= 4096);
 	assert(height >= 0 && height <= 4096);
-	(*level) = new gamelevel;
-	(*level)->tiles.reserve(width * height);
+	(*level) = (gamelevel*)global_alloc(sizeof(gamelevel));
+	(*level)->entities=(gameentity*)global_alloc(sizeof(gameentity) * 1024);
+	(*level)->entity_capacity=1024;
+	(*level)->entity_count=0;
+	(*level)->tiles = (gametile*)global_alloc(sizeof(gametile) * width * height);
 	(*level)->width = width;
 	(*level)->height = height;
 	(*level)->tileatlas = atlas;
 	(*level)->target = targetbuffer;
-	// create_atlas(&(*level)->tileatlas, array_buffer *target, const std::string &filename, int32 numx, int32 numy);
+
 	//  add player
 	add_entity((*level), game_entity_type::entity_player);
 	return 0;
@@ -23,7 +26,7 @@ int32 create_level(gamelevel **level, array_buffer *targetbuffer, textureatlas *
 
 int32 destroy_level(gamelevel **level)
 {
-	delete (*level);
+	global_free(*level);
 	(*level) = nullptr;
 	return 0;
 }

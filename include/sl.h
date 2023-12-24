@@ -194,7 +194,7 @@ void texture_coordinate(array_buffer *db, vec2 tc);
 void colour(array_buffer *db, pixel32 colour);
 void colour(array_buffer *db, rgba colour);
 void draw(array_buffer *db);
-void reset(array_buffer *db);
+
 
 void rectangle(array_buffer *db, vec2 position, float32 width, float32 height, pixel32 colour);
 void rectangle(array_buffer *db, float32 x,float32 y,float32 width,float32 height,pixel32 colour);

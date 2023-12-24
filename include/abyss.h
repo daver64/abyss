@@ -27,8 +27,12 @@ struct gametile {
 };
 
 struct gamelevel {
-	std::vector<gametile> tiles;
-	std::vector<gameentity> entities;
+	//std::vector<gametile> tiles;
+	//std::vector<gameentity> entities;
+	gametile *tiles;
+	gameentity *entities;
+	int32 entity_capacity;
+	int32 entity_count;
 	int32 width{0};
 	int32 height{0};
 	textureatlas *tileatlas{nullptr};

@@ -44,8 +44,8 @@ void global_free(void *block)
     global_num_allocations--;
     fprintf(stderr,"global free #%zu::%p::%zu bytes\n",
         global_num_allocations,block,block_size);
-    free(block);
 	remove_from_alloced_list(block);
+    free(block);
 }
 
 void *global_alloc(const uint32 requested_numbytes)

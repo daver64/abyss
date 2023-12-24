@@ -6,6 +6,8 @@ int32 add_entity(gamelevel *level,game_entity_type type, ivec2 position, int32 h
     e.type=type;
     e.position= position;
     e.health=health;
-    level->entities.emplace_back(e);
+    level->entities[level->entity_count]=e;
+    level->entity_count++;
+    assert( level->entity_count<level->entity_capacity );
     return 0;
 }

@@ -34,7 +34,7 @@ void update_and_render(const float64 delta_t_ms)
 	{
 		ypos=300.0f;
 		xpos=pxpos+12;
-		play_sound(sfx1);
+		//play_sound(sfx1);
 	}
 	if(pxpos>400)
 	{
@@ -85,7 +85,7 @@ void app_init()
 
 	create_soundobject(&sfx1,"../data/samples/cloth-inventory.wav");
 	create_soundobject(&music,"../data/samples/song18.flac");
-	play_sound(music);
+	//play_sound(music);
 
 	create_level(&level,db,tileatlas,80,25);
 }

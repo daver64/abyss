@@ -288,7 +288,3 @@ void draw(array_buffer *db)
     db->array_index = 0;
 }
 
-void reset(array_buffer *db)
-{
-    db->array_index = 0;
-}

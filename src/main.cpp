@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
 void app_init()
 {
 	create_windowed_context(&app_context,900,600, "Abyss");
+	clear_screen(x11colours::black);
+	swap(app_context);
 	create_texture(&logo, "../data/textures/beams.png");
 	create_texture(&sprite1,"../data/textures/red1.png");
 	create_array_buffer(&db);

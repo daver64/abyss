@@ -112,6 +112,25 @@ struct framebuffer
 	bool valid{false};
 };
 
+struct gpu_shader {
+	uint32 program;
+	uint32 geometry;
+	uint32 vertex;
+	uint32 fragment;
+};
+
+void gl_set_uniform2v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
+void gl_set_uniform3v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
+void gl_set_uniform4v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
+void gl_set_uniform_vec2(gpu_shader* shader, const char* name, vec2& value);
+void gl_set_uniform_vec3(gpu_shader* shader, const char* name, vec3& value);
+void gl_set_uniform1i(gpu_shader* shader, const char* name, int32 value);
+void gl_set_uniform_matrix4v(gpu_shader* shader, const char* name, int32 num_elements, mat4x4 value);
+int32 create_shader(gpu_shader **shader,std::string &vertex_glsl,
+	std::string &fragment_glsl, std::string &geometry_glsl);
+void destroy_shader(gpu_shader **shader);
+void bind(gpu_shader *shader);
+
 struct ma_sound;
 struct soundobject
 {

@@ -70,6 +70,7 @@ add_executable(abyss
     src/framebuffer.cpp
     src/maths.cpp
     src/glstate.cpp
+    src/shader.cpp
     src/imgui/imgui.cpp
     src/imgui/imgui_draw.cpp
     src/imgui/imgui_tables.cpp
@@ -97,6 +98,7 @@ add_executable(abyss
     src/framebuffer.cpp
     src/maths.cpp
     src/glstate.cpp
+    src/shader.cpp
     src/imgui/imgui.cpp
     src/imgui/imgui_draw.cpp
     src/imgui/imgui_tables.cpp

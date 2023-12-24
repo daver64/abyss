@@ -48,7 +48,6 @@ void destroy_framebuffer(framebuffer **fb)
 {
 	glDeleteFramebuffers(1, &(*fb)->frame_id);
 	glDeleteFramebuffers(1, &(*fb)->render_id);
-	// delete (*fb);
 	global_free(*fb);
 	(*fb) = nullptr;
 }

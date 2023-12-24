@@ -49,11 +49,11 @@ struct texture
 };
 
 
-class drawbuffer;
+class array_buffer;
 struct textureatlas
 {
 	texture *tex{nullptr};
-	drawbuffer *target{nullptr};
+	array_buffer *target{nullptr};
 	int32 tile_width{0};
 	int32 tile_height{0};
 	int32 numtiles_x{0};
@@ -72,7 +72,7 @@ struct vertexdata {
 	vec2 texture_coordinates;
 };
 
-struct drawbuffer
+struct array_buffer
 {
     vec3 *vertices{nullptr};
     vec3 *normals{nullptr};
@@ -180,36 +180,36 @@ int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin,
 // GPU Drawing
 //
 
-int32 create_drawbuffer(drawbuffer **db);
-int32 destroy_drawbuffer(drawbuffer **db);
-void begin_triangles(drawbuffer *db);
-void begin_quads(drawbuffer *db);
-void begin_lines(drawbuffer *db);
-void end_triangles(drawbuffer *db);
-void end_quads(drawbuffer *db);
-void end_lines(drawbuffer *db);
-void vertex(drawbuffer *db, vec3 vtx);
-void normal(drawbuffer *db, vec3 nml);
-void texture_coordinate(drawbuffer *db, vec2 tc);
-void colour(drawbuffer *db, pixel32 colour);
-void colour(drawbuffer *db, rgba colour);
-void draw(drawbuffer *db);
-void reset(drawbuffer *db);
+int32 create_array_buffer(array_buffer **db);
+int32 destroy_array_buffer(array_buffer **db);
+void begin_triangles(array_buffer *db);
+void begin_quads(array_buffer *db);
+void begin_lines(array_buffer *db);
+void end_triangles(array_buffer *db);
+void end_quads(array_buffer *db);
+void end_lines(array_buffer *db);
+void vertex(array_buffer *db, vec3 vtx);
+void normal(array_buffer *db, vec3 nml);
+void texture_coordinate(array_buffer *db, vec2 tc);
+void colour(array_buffer *db, pixel32 colour);
+void colour(array_buffer *db, rgba colour);
+void draw(array_buffer *db);
+void reset(array_buffer *db);
 
-void rectangle(drawbuffer *db, vec2 position, float32 width, float32 height, pixel32 colour);
-void rectangle(drawbuffer *db, float32 x,float32 y,float32 width,float32 height,pixel32 colour);
-void triangle(drawbuffer *db, vec3 v1,vec3 v2, vec3 v4, pixel32 colour);
-void quad(drawbuffer *db, vec3 v1, vec3 v2, vec3 v3, vec3 v4, pixel32 colour1,pixel32 colour2, pixel32 colour3, pixel32 colour4);
+void rectangle(array_buffer *db, vec2 position, float32 width, float32 height, pixel32 colour);
+void rectangle(array_buffer *db, float32 x,float32 y,float32 width,float32 height,pixel32 colour);
+void triangle(array_buffer *db, vec3 v1,vec3 v2, vec3 v4, pixel32 colour);
+void quad(array_buffer *db, vec3 v1, vec3 v2, vec3 v3, vec3 v4, pixel32 colour1,pixel32 colour2, pixel32 colour3, pixel32 colour4);
 
 
-void quad(drawbuffer *db, vertexdata v1, vertexdata v2,vertexdata v3, vertexdata v4);
-void triangle(drawbuffer *db, vertexdata v1,vertexdata v2,vertexdata v3);
+void quad(array_buffer *db, vertexdata v1, vertexdata v2,vertexdata v3, vertexdata v4);
+void triangle(array_buffer *db, vertexdata v1,vertexdata v2,vertexdata v3);
 
 
 
 
 //
-// framebuffer
+// Framebuffer
 //
 int32 create_framebuffer(framebuffer **fb, int32 width, int32 height);
 void destroy_framebuffer(framebuffer **fb);
@@ -217,20 +217,16 @@ void bind_framebuffer(framebuffer *fb);
 void unbind_framebuffer(framebuffer *fb);
 
 //
-// texture atlas
+// Aexture Atlas
 //
-int32 create_atlas(textureatlas **atlas, drawbuffer *target, const std::string &filename, int32 numx, int32 numy);
-int32 create_atlas(textureatlas **atlas, drawbuffer *target, int32 width, int32 height, int32 numx, int32 numy);
+int32 create_atlas(textureatlas **atlas, array_buffer *target, const std::string &filename, int32 numx, int32 numy);
+int32 create_atlas(textureatlas **atlas, array_buffer *target, int32 width, int32 height, int32 numx, int32 numy);
 void destroy_atlas(textureatlas **atlas);
 void bind_atlas(textureatlas *atlas);
 void begin_atlas(textureatlas *atlas);
 void draw_atlas_tile(textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
 void draw_atlas_tile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
 void end_atlas(textureatlas *atlas);
-
-//
-// Texture Atlas Software Drawing
-//
 int32 putpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 colour);
 int32 getpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 &colour);
 int32 line(textureatlas *atlas, ivec2 p1, ivec2 p2, int32 index, pixel32 colour1, pixel32 colour2);
@@ -240,7 +236,9 @@ int32 triangle(textureatlas *atlas, ivec2 p1,ivec2 p2,ivec2 p3, int32 index,
     pixel32 colour1,pixel32 colour2, pixel32 colour3);
 int32 clear(textureatlas *atlas, int32 index, pixel32 colour);
 
-// graphics pipeline state
+//
+// Graphics Pipeline State
+//
 void clear_screen();
 void clear_screen(pixel32 colour);
 void set_clear_colour(pixel32 colour);
@@ -270,7 +268,9 @@ void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z
 
 
 
-
+//
+// input
+//
 void poll_input(context *ctx);
 void process_input(context *ctx);
 
@@ -278,13 +278,13 @@ void process_input(context *ctx);
 //
 // texture drawing. software
 //
-void end_quads(drawbuffer *target);
-void begin_quads(drawbuffer *target);
-void draw_rectangle(drawbuffer *target,
+void end_quads(array_buffer *target);
+void begin_quads(array_buffer *target);
+void draw_rectangle(array_buffer *target,
 					float32 x, float32 y,
 					float32 width, float32 height,
 					pixel32 colour);
-void bind_texture(drawbuffer *db, texture *tex);
+void bind_texture(array_buffer *db, texture *tex);
 void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 colour = x11colours::white);
 void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 colour, const char* fmt, ...);
 
@@ -309,4 +309,5 @@ int32 string_split_c(const char* txt, char delim, char*** tokens);
 // GUI
 //
 int32 init_gui(context *app_context);
+void deinit_gui();
 void draw_gui();

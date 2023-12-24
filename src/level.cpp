@@ -5,7 +5,7 @@ gamelevel *current_level{nullptr};
 uint32 getkey(uint32 i);
 void keyboard_install(context *ctx);
 
-int32 create_level(gamelevel **level, drawbuffer *targetbuffer, textureatlas *atlas, int32 width, int32 height)
+int32 create_level(gamelevel **level, array_buffer *targetbuffer, textureatlas *atlas, int32 width, int32 height)
 {
 	assert(width >= 0 && width <= 4096);
 	assert(height >= 0 && height <= 4096);
@@ -15,7 +15,7 @@ int32 create_level(gamelevel **level, drawbuffer *targetbuffer, textureatlas *at
 	(*level)->height = height;
 	(*level)->tileatlas = atlas;
 	(*level)->target = targetbuffer;
-	// create_atlas(&(*level)->tileatlas, drawbuffer *target, const std::string &filename, int32 numx, int32 numy);
+	// create_atlas(&(*level)->tileatlas, array_buffer *target, const std::string &filename, int32 numx, int32 numy);
 	//  add player
 	add_entity((*level), game_entity_type::entity_player);
 	return 0;

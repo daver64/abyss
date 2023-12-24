@@ -3,7 +3,7 @@
 context *app_context{nullptr};
 texture *logo{nullptr};
 texture *sprite1{nullptr};
-drawbuffer *db{nullptr};
+array_buffer *db{nullptr};
 textureatlas *atlas{nullptr};
 textureatlas *tileatlas{nullptr};
 soundobject *music{nullptr};
@@ -78,7 +78,7 @@ void app_init()
 	create_windowed_context(&app_context,900,600, "Abyss");
 	create_texture(&logo, "../data/textures/beams.png");
 	create_texture(&sprite1,"../data/textures/red1.png");
-	create_drawbuffer(&db);
+	create_array_buffer(&db);
 	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
 	create_atlas(&tileatlas,db,"../data/textures/scifitiles-sheet.png",14,6);
 	keyboard_install(app_context);
@@ -96,7 +96,7 @@ void app_shutdown()
 {
 	destroy_atlas(&atlas);
 	destroy_atlas(&tileatlas);
-	destroy_drawbuffer(&db);
+	destroy_array_buffer(&db);
 	destroy_texture(&logo);
 	destroy_texture(&sprite1);
 	destroy_soundobject(&music);

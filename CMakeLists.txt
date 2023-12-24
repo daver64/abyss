@@ -66,7 +66,7 @@ add_executable(abyss
     src/fastnoise.cpp
     src/texture.cpp
     src/screen.cpp
-    src/drawbuffer.cpp
+    src/arraybuffer.cpp
     src/framebuffer.cpp
     src/maths.cpp
     src/glstate.cpp
@@ -93,7 +93,7 @@ add_executable(abyss
     src/fastnoise.cpp
     src/texture.cpp
     src/screen.cpp
-    src/drawbuffer.cpp
+    src/arraybuffer.cpp
     src/framebuffer.cpp
     src/maths.cpp
     src/glstate.cpp

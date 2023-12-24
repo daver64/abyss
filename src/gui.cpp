@@ -22,6 +22,12 @@ int32 init_gui(context *app_context)
 
     return 0;
 }
+void deinit_gui()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
 void draw_gui()
 {
     ImGui_ImplOpenGL3_NewFrame();

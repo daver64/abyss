@@ -96,7 +96,7 @@ void bind_texture(texture *tex)
 {
     glBindTexture(GL_TEXTURE_2D, tex->ref);
 }
-void bind_texture(drawbuffer *db, texture *tex)
+void bind_texture(array_buffer *db, texture *tex)
 {
     db->tex0_glref=tex->ref;
     glBindTexture(GL_TEXTURE_2D, tex->ref);
@@ -106,7 +106,7 @@ void texture_unbind()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-int32 create_atlas(textureatlas **atlas,drawbuffer *target,const std::string& filename,int32 numx,int32 numy)
+int32 create_atlas(textureatlas **atlas,array_buffer *target,const std::string& filename,int32 numx,int32 numy)
 {
     (*atlas) = (textureatlas*)global_alloc(sizeof(textureatlas));
     (*atlas)->numtiles_x=numx;
@@ -117,7 +117,7 @@ int32 create_atlas(textureatlas **atlas,drawbuffer *target,const std::string& fi
     (*atlas)->tile_width=(*atlas)->tex->width/numx;
     return result;
 }
-int32 create_atlas(textureatlas **atlas, drawbuffer *target, int32 width, int32 height, int32 numx, int32 numy)
+int32 create_atlas(textureatlas **atlas, array_buffer *target, int32 width, int32 height, int32 numx, int32 numy)
 {
     (*atlas) = (textureatlas*)global_alloc(sizeof(textureatlas));
     (*atlas)->numtiles_x=numx;
@@ -145,7 +145,7 @@ void begin_atlas(textureatlas *atlas)
 void draw_atlas_tile(textureatlas *atlas, float_t x1, float_t y1, float_t width,
                     float_t height, int32 index, pixel32 tcolour)
 {
-    drawbuffer *target=atlas->target;
+    array_buffer *target=atlas->target;
     texture *tex=atlas->tex;
     int32 numtiles_x = atlas->numtiles_x;
     int32 numtiles_y = atlas->numtiles_y;

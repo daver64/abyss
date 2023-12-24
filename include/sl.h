@@ -1,3 +1,8 @@
+/***
+* Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
+* All rights reserved.
+*/
+
 #pragma once
 
 
@@ -157,6 +162,7 @@ int32 create_soundobject(soundobject **sobj,const std::string &filename);
 void destroy_soundobject(soundobject **sobj);
 int32 play_sound(soundobject *sobj);
 int32 init_sound();
+int32 stop_sound(soundobject *sobj);
 void deinit_sound();
 
 

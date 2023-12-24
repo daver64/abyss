@@ -1,4 +1,7 @@
-
+/***
+* Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
+* All rights reserved.
+*/
 #ifdef _WIN32
 #include <windows.h>
 #include <GL/gl.h>

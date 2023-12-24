@@ -1,3 +1,7 @@
+/***
+* Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
+* All rights reserved.
+*/
 #include "sl.h"
 
 const float64 PI = 3.14159265358979323846264338327950288;

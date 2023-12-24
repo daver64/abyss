@@ -1,4 +1,7 @@
-
+/***
+* Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
+* All rights reserved.
+*/
 #define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 #include <cstring>

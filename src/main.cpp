@@ -8,7 +8,7 @@ textureatlas *atlas{nullptr};
 textureatlas *tileatlas{nullptr};
 soundobject *music{nullptr};
 soundobject *sfx1{nullptr};
-
+bool playsounds{true};
 
 gamelevel *level{nullptr};
 void update_and_render(const float64 delta_t_ms)
@@ -34,7 +34,8 @@ void update_and_render(const float64 delta_t_ms)
 	{
 		ypos=300.0f;
 		xpos=pxpos+12;
-		play_sound(sfx1);
+		if(playsounds)
+			play_sound(sfx1);
 	}
 	if(pxpos>400)
 	{
@@ -46,7 +47,14 @@ void update_and_render(const float64 delta_t_ms)
 	begin_quads(db);
 	rectangle(db,pxpos,300,32,32,x11colours::white);
 	end_quads(db);
-
+	if(getkey(0)==' ')
+	{
+		playsounds=false;
+	}
+	if(!playsounds)
+	{
+		stop_sound(music);
+	}
 	gprintf(atlas,0,0,x11colours::green,"frame delta t ms=%2.0lf, raw getkey=%d",
 		std::floor(get_frame_delta_t_ms()),getkey(0));
 

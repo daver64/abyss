@@ -1,3 +1,4 @@
+
 #include "abyss.h"
 
 int32 add_entity(gamelevel *level,game_entity_type type, ivec2 position, int32 health)

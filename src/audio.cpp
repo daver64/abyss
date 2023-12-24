@@ -1,4 +1,7 @@
-
+/***
+* Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
+* All rights reserved.
+*/
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 #include "sl.h"
@@ -50,6 +53,12 @@ void destroy_soundobject(soundobject **sobj)
     global_free((*sobj));
     (*sobj) = nullptr;
 }
+
+int32 stop_sound(soundobject *sobj)
+{
+    ma_sound_stop(sobj->sound);
+    return 0;
+}
 int32 play_sound(soundobject *sobj)
 {
     if (ma_sound_is_playing(sobj->sound))
@@ -67,6 +76,7 @@ int32 play_sound(soundobject *sobj)
     return PLAY_SOUND_OK;
 }
 
+
 int32 init_sound()
 {
     engine = (ma_engine*)global_alloc(sizeof(ma_engine),"sound engine object");
@@ -74,7 +84,6 @@ int32 init_sound()
     ma_result result = ma_engine_init(&config, engine);
     if (result != MA_SUCCESS)
     {
-        //delete engine;
         global_free(engine);
         engine = nullptr;
         fprintf(stderr, "failed to init audio engine\n");

@@ -1,5 +1,6 @@
-/**
- * (c) 2023 David Rowbotham thedaver64@gmail.com
+/***
+* Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
+* All rights reserved.
 */
 #pragma once
 #include <cstdint>

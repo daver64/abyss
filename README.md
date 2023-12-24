@@ -14,7 +14,6 @@ Download somewhere. Then...
 `cmake -G "Build System Of Choice" ../`\
 ( eg: on windows with msvc `cmake -G "NMake Makefiles" ../` then `nmake` to build using nmake)\
 It is strongly recommended to build in a specific build directory.\
-if compilation is successful the executable will be in project-dir/bin.\
-
+if compilation is successful the executable will be in project-dir/bin.
 Happy Tinkering\
 Dave :)

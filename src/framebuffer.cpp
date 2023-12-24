@@ -17,13 +17,13 @@
 
 int32 create_framebuffer(framebuffer **fb, int32 width, int32 height)
 {
-	(*fb) = (framebuffer*)global_alloc(sizeof(framebuffer),"framebuffer object");// new framebuffer;
-    (*fb)->width=width;
-    (*fb)->height=height;
-    glEnable(GL_TEXTURE_2D);
-    glGenTextures(1, &(*fb)->glref);
-    glBindTexture(GL_TEXTURE_2D, (*fb)->glref);
- 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	(*fb) = (framebuffer *)global_alloc(sizeof(framebuffer), "framebuffer object"); // new framebuffer;
+	(*fb)->width = width;
+	(*fb)->height = height;
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &(*fb)->glref);
+	glBindTexture(GL_TEXTURE_2D, (*fb)->glref);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -42,15 +42,15 @@ int32 create_framebuffer(framebuffer **fb, int32 width, int32 height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-    return 0;
+	return 0;
 }
 void destroy_framebuffer(framebuffer **fb)
 {
 	glDeleteFramebuffers(1, &(*fb)->frame_id);
 	glDeleteFramebuffers(1, &(*fb)->render_id);
-	//delete (*fb);
+	// delete (*fb);
 	global_free(*fb);
-    (*fb)=nullptr;
+	(*fb) = nullptr;
 }
 void bind_framebuffer(framebuffer *fb)
 {

@@ -67,7 +67,7 @@ void dump_global_allocs()
 #ifdef _WIN32
 		blocksize = _msize(block.block_pointer);
 #else
-		blocksize = malloc_usable_size(block);
+		blocksize = malloc_usable_size(block.block_pointer);
 #endif
 		if(block.description)
 		{

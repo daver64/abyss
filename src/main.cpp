@@ -34,7 +34,7 @@ void update_and_render(const float64 delta_t_ms)
 	{
 		ypos=300.0f;
 		xpos=pxpos+12;
-		//play_sound(sfx1);
+		play_sound(sfx1);
 	}
 	if(pxpos>400)
 	{
@@ -62,6 +62,8 @@ int main(int argc, char *argv[])
 	{
 		process_input(app_context);
 		update_and_render(get_frame_delta_t_ms());
+
+		draw_gui();
 		swap(app_context);
 
 	} while (!want_to_quit(app_context));
@@ -81,9 +83,11 @@ void app_init()
 	create_atlas(&tileatlas,db,"../data/textures/scifitiles-sheet.png",14,6);
 	keyboard_install(app_context);
 	
+	init_gui(app_context);
+
 	create_soundobject(&sfx1,"../data/samples/cloth-inventory.wav");
-	create_soundobject(&music,"../data/samples/song18.mp3");
-	//play_sound(music);
+	create_soundobject(&music,"../data/samples/song18.flac");
+	play_sound(music);
 
 	create_level(&level,db,tileatlas,80,25);
 }

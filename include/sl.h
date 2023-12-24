@@ -304,3 +304,9 @@ const float64 get_frame_delta_t_ms();
 
 char* load_text_file(const char* filename, int32& num_bytes_read);
 int32 string_split_c(const char* txt, char delim, char*** tokens);
+
+//
+// GUI
+//
+int32 init_gui(context *app_context);
+void draw_gui();

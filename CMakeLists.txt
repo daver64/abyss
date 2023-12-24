@@ -55,6 +55,7 @@ endif(MINGW)
 if(MSVC)
 add_executable(abyss
     src/main.cpp
+    src/gui.cpp
     src/level.cpp
     src/entity.cpp
     src/input.cpp
@@ -82,6 +83,7 @@ endif(MSVC)
 if(UNIX)
 add_executable(abyss
     src/main.cpp
+    src/gui.cpp
     src/level.cpp
     src/entity.cpp
     src/input.cpp

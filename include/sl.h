@@ -25,8 +25,7 @@ void load_gl_extensions();
 #include "resource.h"
 #endif
 
-#define FN_USE_DOUBLES
-#include "fastnoise.h"
+
 #include "sl_internal.h"
 #include "sl_maths.h"
 
@@ -40,8 +39,7 @@ struct rgba {
 	float32 a{1.0f};
 };
 
-rgba from_pixel32(pixel32 pixel);
-pixel32 from_rgba(rgba pixel);
+
 //
 // Texture Handling
 //
@@ -181,7 +179,6 @@ void dump_global_allocs();
 // context
 int32 create_fullscreen_context(context **ctx, const std::string &titletext);
 int32 create_windowed_context(context** ctx, int32 width, int32 height, const std::string& titletext);
-
 void destroy_context(context **ctx);
 
 // texture
@@ -191,16 +188,15 @@ void destroy_texture(texture **tex);
 int32 save_texture(texture *tex, const std::string &filename);
 
 // Software Drawing
-int32 putpixel(texture *pixelbuffer, ivec2 p, pixel32 colour);
-int32 getpixel(texture *pixelbuffer, ivec2 p, pixel32 &colour);
-int32 line(texture *pixelbuffer, ivec2 p1, ivec2 p2, pixel32 colour1, pixel32 colour2);
-int32 rectangle(texture *pixelbuffer, ivec2 p, int32 width, int32 height,
-	pixel32 colour1,pixel32 colour2, pixel32 colour3, pixel32 colour4);
-int32 triangle(texture *pixelbuffer, ivec2 p1,ivec2 p2,ivec2 p3,
-    pixel32 colour1,pixel32 colour2, pixel32 colour3);
-int32 clear(texture *pixelbuffer, pixel32 colour);
-int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin,ivec2 source_origin, int32 width, int32 height);
+void putpixel(texture *pixelbuffer, int32 x,int32 y, pixel32 colour);
+pixel32 getpixel(texture *pixelbuffer,int32 x,int32 y);
+void line(texture *pixelbuffer,int32 x1,int32 y1,int32 x2,int32 y2,pixel32 colour1,pixel32 colour2);
+void rectangle(texture *pixelbuffer, int32 x,int32 y, int32 width,int32 height, pixel32 colour);
+void clear(texture *pixelbuffer,pixel32 colour);
 
+int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin,ivec2 source_origin, int32 width, int32 height);
+rgba from_pixel32(pixel32 pixel);
+pixel32 from_rgba(rgba pixel);
 
 //
 // GPU Drawing

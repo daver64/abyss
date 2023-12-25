@@ -61,7 +61,6 @@ add_executable(abyss
     src/utility.cpp
     src/audio.cpp
     src/glext.cpp
-    src/fastnoise.cpp
     src/texture.cpp
     src/screen.cpp
     src/arraybuffer.cpp
@@ -87,7 +86,6 @@ add_executable(abyss
     src/context.cpp
     src/utility.cpp
     src/audio.cpp
-    src/fastnoise.cpp
     src/texture.cpp
     src/screen.cpp
     src/arraybuffer.cpp

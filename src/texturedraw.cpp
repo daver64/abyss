@@ -1,7 +1,7 @@
 /***
-* Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
-* All rights reserved.
-*/
+ * Copyright 2004-2024, Dave Rowbotham and Toni Ylisirnio
+ * All rights reserved.
+ */
 #include "sl.h"
 
 /*
@@ -9,27 +9,28 @@
     call texture_gpu_write(tex) when done to upload
     to the gpu texture object.
 */
-int32 putpixel(texture *pixelbuffer, ivec2 p, pixel32 colour)
+void putpixel(texture *pixelbuffer, int32 x, int32 y, pixel32 colour)
 {
     assert(pixelbuffer);
-    assert(p.x >= 0 && p.x < pixelbuffer->width);
-    assert(p.y >= 0 && p.y < pixelbuffer->height);
-    pixelbuffer->pixels[p.y * pixelbuffer->width + p.x] = colour;
-    return 0;
+    assert(x >= 0 && x < pixelbuffer->width);
+    assert(y >= 0 && y < pixelbuffer->height);
+    pixelbuffer->pixels[y * pixelbuffer->width + x] = colour;
 }
 
-int32 getpixel(texture *pixelbuffer, ivec2 p, pixel32 &colour)
+pixel32 getpixel(texture *pixelbuffer, int32 x, int32 y)
 {
     assert(pixelbuffer);
-    assert(p.x >= 0 && p.x < pixelbuffer->width);
-    assert(p.y >= 0 && p.y < pixelbuffer->height);
-    colour = pixelbuffer->pixels[p.y * pixelbuffer->width + p.x];
-    return 0;
+    assert(x >= 0 && x < pixelbuffer->width);
+    assert(y >= 0 && y < pixelbuffer->height);
+    pixel32 colour = pixelbuffer->pixels[y * pixelbuffer->width + x];
+    return colour;
 }
 
-int32 line(texture *pixelbuffer, ivec2 p1, ivec2 p2, pixel32 colour1, pixel32 colour2)
+void line(texture *pixelbuffer, int32 x1, int32 y1, int32 x2, int32 y2, pixel32 colour1, pixel32 colour2)
 {
     assert(pixelbuffer);
+    ivec2 p1{x1, y1};
+    ivec2 p2{x2, y2};
     assert(p1.x >= 0 && p1.x < pixelbuffer->width);
     assert(p1.y >= 0 && p1.y < pixelbuffer->height);
     assert(p2.x >= 0 && p2.x < pixelbuffer->width);
@@ -61,16 +62,16 @@ int32 line(texture *pixelbuffer, ivec2 p1, ivec2 p2, pixel32 colour1, pixel32 co
             index++;
             px = i + p1.x;
             py = (int32)(slope * i + p1.y);
-            putpixel(pixelbuffer, ivec2(px, py), colour);
+            putpixel(pixelbuffer, px, py, colour);
         }
         px = dx + p1.x;
-        py = (int32_t)(slope * dx + p1.y);
-        putpixel(pixelbuffer, ivec2(px, py), colour);
+        py = (int32)(slope * dx + p1.y);
+        putpixel(pixelbuffer, px, py, colour);
     }
     else
     {
         pixel32 colour = colour2;
-        slope = (float_t)dx / (float_t)dy;
+        slope = (float32)dx / (float32)dy;
         for (i = 0; i != dy; i += sdy)
         {
             uint8 r = (uint8)((float32)getr(colour1) + ((float32)index / l) * ((float32)getr(colour2) - getr(colour1)));
@@ -78,15 +79,14 @@ int32 line(texture *pixelbuffer, ivec2 p1, ivec2 p2, pixel32 colour1, pixel32 co
             uint8 b = (uint8)((float32)getb(colour1) + ((float32)index / l) * ((float32)getb(colour2) - getb(colour1)));
             colour = rgb(b, g, r);
             index++;
-            px = (int32_t)(slope * i + p1.x);
+            px = (int32)(slope * i + p1.x);
             py = i + p1.y;
-            putpixel(pixelbuffer, ivec2(px, py), colour);
+            putpixel(pixelbuffer, px, py, colour);
         }
-        px = (int32_t)(slope * dy + p1.x);
+        px = (int32)(slope * dy + p1.x);
         py = dy + p1.y;
-        putpixel(pixelbuffer, ivec2(px, py), colour);
+        putpixel(pixelbuffer, px, py, colour);
     }
-    return 0;
 }
 
 int32 triangle(texture *pixelbuffer, ivec2 p1, ivec2 p2, ivec2 p3,
@@ -100,14 +100,14 @@ int32 triangle(texture *pixelbuffer, ivec2 p1, ivec2 p2, ivec2 p3,
     assert(p3.x >= 0 && p3.x < pixelbuffer->width);
     assert(p3.y >= 0 && p3.y < pixelbuffer->height);
 
-    line(pixelbuffer, p1, p2, colour1, colour2);
-    line(pixelbuffer, p2, p3, colour2, colour3);
-    line(pixelbuffer, p3, p1, colour3, colour1);
+    line(pixelbuffer, p1.x,p1.y, p2.x,p2.y, colour1, colour2);
+    line(pixelbuffer, p2.x,p2.y, p3.x,p3.y, colour2, colour3);
+    line(pixelbuffer, p3.x, p3.y, p1.x, p1.y, colour3, colour1);
     return 0;
 }
-int32 rectangle(texture *pixelbuffer, ivec2 p, int32 width, int32 height,
-                pixel32 colour1, pixel32 colour2, pixel32 colour3, pixel32 colour4)
+void rectangle(texture *pixelbuffer, int32 x, int32 y, int32 width, int32 height, pixel32 colour)
 {
+    ivec2 p{x, y};
     ivec2 p1 = p;
     ivec2 p3{p.x + width, p.y + height};
     assert(pixelbuffer);
@@ -118,14 +118,12 @@ int32 rectangle(texture *pixelbuffer, ivec2 p, int32 width, int32 height,
     ivec2 p2{p3.x, p1.y};
     ivec2 p4{p1.x, p3.y};
 
-    line(pixelbuffer, p1, p2, colour1, colour2);
-    line(pixelbuffer, p2, p3, colour2, colour3);
-    line(pixelbuffer, p3, p4, colour3, colour4);
-    line(pixelbuffer, p4, p1, colour4, colour1);
-
-    return 0;
+    line(pixelbuffer, p1.x, p1.y, p2.x, p2.y, colour, colour);
+    line(pixelbuffer, p2.x, p2.y, p3.x, p3.y, colour, colour);
+    line(pixelbuffer, p3.x, p3.y, p4.x, p4.y, colour, colour);
+    line(pixelbuffer, p4.x, p4.y, p1.x, p1.y, colour, colour);
 }
-int32 clear(texture *pixelbuffer, pixel32 colour)
+void clear(texture *pixelbuffer, pixel32 colour)
 {
     assert(pixelbuffer);
     int32 count = pixelbuffer->width * pixelbuffer->height;
@@ -140,7 +138,6 @@ int32 clear(texture *pixelbuffer, pixel32 colour)
         *pixels = clearcolour;
         pixels++;
     }
-    return 0;
 }
 int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin, ivec2 source_origin, int32 width, int32 height)
 {
@@ -152,8 +149,8 @@ int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin,
     for (int32 i = 0; i < numops; i++)
     {
         pixel32 colour;
-        getpixel(source, source_coord, colour);
-        putpixel(destination, destination_coord, colour);
+        colour = getpixel(source, source_coord.x, source_coord.y);
+        putpixel(destination, destination_coord.x, destination_coord.y, colour);
         source_coord.x++;
         destination_coord.x++;
         if (source_coord.x - source_origin.x >= width)
@@ -179,7 +176,8 @@ int32 putpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 colour)
     const int32 tile_x = (index % (atlas->numtiles_x) * atlas->tile_width);
     const int32 tile_y = (index / (atlas->numtiles_x) * atlas->tile_height);
     const ivec2 pos{tile_x + p.x, tile_y + p.y};
-    return putpixel(atlas->tex, pos, colour);
+    putpixel(atlas->tex, pos.x, pos.y, colour);
+    return 0;
 }
 int32 getpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 &colour)
 {
@@ -189,7 +187,8 @@ int32 getpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 &colour)
     const int32 tile_x = (index % (atlas->numtiles_x) * atlas->tile_width);
     const int32 tile_y = (index / (atlas->numtiles_x) * atlas->tile_height);
     const ivec2 pos{tile_x + p.x, tile_y + p.y};
-    return getpixel(atlas->tex, pos, colour);
+    colour = getpixel(atlas->tex, pos.x, pos.y);
+    return 0;
 }
 int32 line(textureatlas *atlas, ivec2 p1, ivec2 p2, int32 index, pixel32 colour1, pixel32 colour2)
 {
@@ -202,7 +201,8 @@ int32 line(textureatlas *atlas, ivec2 p1, ivec2 p2, int32 index, pixel32 colour1
     const int32 tile_y = ((index / atlas->numtiles_x) * atlas->tile_height);
     const ivec2 pos1{tile_x + p1.x, tile_y + p1.y};
     const ivec2 pos2{tile_x + p2.x, tile_y + p2.y};
-    return line(atlas->tex, pos1, pos2, colour1, colour2);
+    line(atlas->tex, pos1.x, pos1.y, pos2.x, pos2.y, colour1, colour2);
+    return 0;
 }
 int32 rectangle(textureatlas *atlas, ivec2 p, int32 width, int32 height, int32 index,
                 pixel32 colour1, pixel32 colour2, pixel32 colour3, pixel32 colour4)

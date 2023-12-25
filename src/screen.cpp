@@ -21,7 +21,10 @@ void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
-
+void ortho2d(context *app_context,bool flip, float32 near_z,float32 far_z)
+{
+    ortho2d(app_context->width,app_context->height,flip,near_z,far_z);  
+}
 
 #define NUM_TIME_SAMPLES 8
 float64 average_frame_delta_t_ms{0.0};

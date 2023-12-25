@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	{
 		process_input(app_context);
 		clear_screen(x11colours::black);
-		ortho2d(app_context->width, app_context->height, false, -1.0f, 1.0f);
+		ortho2d(app_context);
 		disable_depthtest();
 		enable_blending();
 		

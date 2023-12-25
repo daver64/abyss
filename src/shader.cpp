@@ -85,7 +85,7 @@ void unbind(gpu_shader *shader)
 {
     glUseProgram(0);
 }
-int32 gl_set_uniform_float(gpu_shader *shader, const char *uniform, float32 var)
+int32 set_uniform_float(gpu_shader *shader, const char *uniform, float32 var)
 {
     int32 loc = glGetUniformLocation(shader->program, uniform);
     if (loc != -1)
@@ -95,37 +95,37 @@ int32 gl_set_uniform_float(gpu_shader *shader, const char *uniform, float32 var)
     return loc;
 }
 
-void gl_set_uniform2v(gpu_shader *shader, const char *name, int32 num_elements, float32 *value)
+void set_uniform2v(gpu_shader *shader, const char *name, int32 num_elements, float32 *value)
 {
     GLint uniform_loc = glGetUniformLocation(shader->program, name);
     glUniform2fv(uniform_loc, num_elements, value);
 }
-void gl_set_uniform3v(gpu_shader *shader, const char *name, int32 num_elements, float32 *value)
+void set_uniform3v(gpu_shader *shader, const char *name, int32 num_elements, float32 *value)
 {
     GLint uniform_loc = glGetUniformLocation(shader->program, name);
     glUniform3fv(uniform_loc, num_elements, value);
 }
-void gl_set_uniform4v(gpu_shader *shader, const char *name, int32 num_elements, float32 *value)
+void set_uniform4v(gpu_shader *shader, const char *name, int32 num_elements, float32 *value)
 {
     GLint uniform_loc = glGetUniformLocation(shader->program, name);
     glUniform4fv(uniform_loc, num_elements, value);
 }
-void gl_set_uniform_vec2(gpu_shader *shader, const char *name, vec2 &value)
+void set_uniform_vec2(gpu_shader *shader, const char *name, vec2 &value)
 {
     float32 v[2]{value.x, value.y};
-    gl_set_uniform2v(shader, name, 1, &v[0]);
+    set_uniform2v(shader, name, 1, &v[0]);
 }
-void gl_set_uniform_vec3(gpu_shader *shader, const char *name, vec3 &value)
+void set_uniform_vec3(gpu_shader *shader, const char *name, vec3 &value)
 {
     float32 v[3]{value.x, value.y, value.z};
-    gl_set_uniform3v(shader, name, 1, &v[0]);
+    set_uniform3v(shader, name, 1, &v[0]);
 }
-void gl_set_uniform1i(gpu_shader *shader, const char *name, int32 value)
+void set_uniform1i(gpu_shader *shader, const char *name, int32 value)
 {
     GLint uniform_loc = glGetUniformLocation(shader->program, name);
     glUniform1i(uniform_loc, value);
 }
-void gl_set_uniform_matrix4v(gpu_shader *shader, const char *name, int32 num_elements, mat4x4 value)
+void set_uniform_matrix4v(gpu_shader *shader, const char *name, int32 num_elements, mat4x4 value)
 {
     GLint uniform_loc = glGetUniformLocation(shader->program, name);
     glUniformMatrix4fv(uniform_loc, num_elements, GL_FALSE, (const GLfloat *)&value);

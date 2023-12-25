@@ -68,7 +68,8 @@ struct textureatlas
 // Drawing Primitives
 //
 
-struct vertexdata {
+struct vertexdata 
+{
 	vec3 position;
 	vec3 normal;
 	rgba colour;
@@ -103,7 +104,6 @@ struct array_buffer
     uint64 tex3_offset{0};
 };
 
-
 struct framebuffer
 {
 	int32 width{0};
@@ -115,24 +115,13 @@ struct framebuffer
 	bool valid{false};
 };
 
-struct gpu_shader {
+struct gpu_shader 
+{
 	uint32 program;
 	uint32 geometry;
 	uint32 vertex;
 	uint32 fragment;
 };
-
-void gl_set_uniform2v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
-void gl_set_uniform3v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
-void gl_set_uniform4v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
-void gl_set_uniform_vec2(gpu_shader* shader, const char* name, vec2& value);
-void gl_set_uniform_vec3(gpu_shader* shader, const char* name, vec3& value);
-void gl_set_uniform1i(gpu_shader* shader, const char* name, int32 value);
-void gl_set_uniform_matrix4v(gpu_shader* shader, const char* name, int32 num_elements, mat4x4 value);
-int32 create_shader(gpu_shader **shader,std::string &vertex_glsl,
-	std::string &fragment_glsl, std::string &geometry_glsl);
-void destroy_shader(gpu_shader **shader);
-void bind(gpu_shader *shader);
 
 struct ma_sound;
 struct soundobject
@@ -187,13 +176,26 @@ int32 create_texture(texture **tex, const std::string &filename, const bool mipm
 void destroy_texture(texture **tex);
 int32 save_texture(texture *tex, const std::string &filename);
 
+// shader
+void set_uniform2v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
+void set_uniform3v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
+void set_uniform4v(gpu_shader* shader, const char* name, int32 num_elements, float32* value);
+void set_uniform_vec2(gpu_shader* shader, const char* name, vec2& value);
+void set_uniform_vec3(gpu_shader* shader, const char* name, vec3& value);
+void set_uniform1i(gpu_shader* shader, const char* name, int32 value);
+void set_uniform_matrix4v(gpu_shader* shader, const char* name, int32 num_elements, mat4x4 value);
+int32 create_shader(gpu_shader **shader,std::string &vertex_glsl,
+	std::string &fragment_glsl, std::string &geometry_glsl);
+void destroy_shader(gpu_shader **shader);
+void bind(gpu_shader *shader);
+
+
 // Software Drawing
 void putpixel(texture *pixelbuffer, int32 x,int32 y, pixel32 colour);
 pixel32 getpixel(texture *pixelbuffer,int32 x,int32 y);
 void line(texture *pixelbuffer,int32 x1,int32 y1,int32 x2,int32 y2,pixel32 colour1,pixel32 colour2);
 void rectangle(texture *pixelbuffer, int32 x,int32 y, int32 width,int32 height, pixel32 colour);
 void clear(texture *pixelbuffer,pixel32 colour);
-
 int32 pixelcopy(texture *destination, texture *source, ivec2 destination_origin,ivec2 source_origin, int32 width, int32 height);
 rgba from_pixel32(pixel32 pixel);
 pixel32 from_rgba(rgba pixel);
@@ -286,7 +288,8 @@ void disable_depthtest();
 void enable_depthtest();
 void swap(context *ctx);
 
-void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z);
+void ortho2d(int32 width, int32 height, bool flip = false, float32 near_z = -1.0f, float32 far_z = 1.0f);
+void ortho2d(context *app_context, bool flip = false, float32 near_z = -1.0f, float32 far_z = 1.0f);
 
 
 

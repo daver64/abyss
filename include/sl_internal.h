@@ -5,6 +5,25 @@
 #pragma once
 
 
+#include <cstdint>
+#include <cstdlib>
+#include <cstdio>
+#include <string>
+#include <cassert>
+#include <vector>
+
+#include "glm/glm.hpp"
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include "glm/gtx/quaternion.hpp"
+#include <xmmintrin.h>
+
+#ifdef _WIN32
+void load_gl_extensions();
+#include "resource.h"
+#endif
+
 using glm::dmat4x4;
 using glm::dvec2;
 using glm::dvec3;
@@ -42,6 +61,7 @@ typedef uint32_t pixel32;
 typedef float float32;
 typedef double float64;
 typedef unsigned char ubyte;
+typedef vec4 rgba;
 
 #define ERROR_CREATE_DRAWBUFFER_DRAWBUFFER (-1)
 #define ERROR_CREATE_DRAWBUFFER_VERTICES (-2)

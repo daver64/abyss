@@ -6,9 +6,9 @@ textureatlas *atlas{nullptr};
 
 int main(int argc, char *argv[])
 {
-	create_windowed_context(&app_context, 900, 600, "Abyss");
+	create_windowed_context(&app_context, "Abyss");
 	create_array_buffer(&db);
-	create_atlas(&atlas, db, "../data/textures/whitefont.png", 32, 8);
+	create_atlas(&atlas, "../data/textures/whitefont.png", 32, 8);
 	keyboard_install(app_context);
 	init_gui(app_context);
 	do
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 		
 		draw_gui();
 
-		gprintf(atlas, 0, 0, x11colours::green, "frame delta t ms=%2.0lf, raw getkey=%d",
+		gprintf(db,atlas, 0, 0, x11colours::green, "frame delta t ms=%2.0lf, raw getkey=%d",
 				std::floor(get_frame_delta_t_ms()), getkey(0));
 		swap(app_context);
 

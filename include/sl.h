@@ -6,42 +6,17 @@
 #pragma once
 
 
-#include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <string>
-#include <cassert>
-#include <vector>
-
-#include "glm/glm.hpp"
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-#include "glm/gtx/quaternion.hpp"
-#include <xmmintrin.h>
-
-#ifdef _WIN32
-void load_gl_extensions();
-#include "resource.h"
-#endif
 
 
 #include "sl_internal.h"
 #include "sl_maths.h"
 
-//
-// Colour Primitive
-//
-struct rgba {
-	float32 r{1.0f};
-	float32 g{1.0f};
-	float32 b{1.0f};
-	float32 a{1.0f};
-};
-
+struct ma_sound;
+struct GLFWwindow;
+struct GLFWvidmode;
 
 //
-// Texture Handling
+// Textures
 //
 struct texture
 {
@@ -51,12 +26,9 @@ struct texture
 	int32 height{0};
 };
 
-
-class array_buffer;
 struct textureatlas
 {
 	texture *tex{nullptr};
-	array_buffer *target{nullptr};
 	int32 tile_width{0};
 	int32 tile_height{0};
 	int32 numtiles_x{0};
@@ -67,7 +39,6 @@ struct textureatlas
 //
 // Drawing Primitives
 //
-
 struct vertexdata 
 {
 	vec3 position;
@@ -123,14 +94,11 @@ struct gpu_shader
 	uint32 fragment;
 };
 
-struct ma_sound;
 struct soundobject
 {
 	ma_sound *sound;
 };
 
-struct GLFWwindow;
-struct GLFWvidmode;
 struct context
 {
 	GLFWwindow *window{nullptr};
@@ -139,8 +107,6 @@ struct context
 	bool fullscreen;
 	bool quit_requested;
 };
-
-
 
 //
 // audio handling
@@ -167,11 +133,11 @@ void dump_global_allocs();
 
 // context
 int32 create_fullscreen_context(context **ctx, const std::string &titletext);
-int32 create_windowed_context(context** ctx, int32 width, int32 height, const std::string& titletext);
+int32 create_windowed_context(context** ctx, const std::string& titletext,const int32 width=0,const int32 height=0);
 void destroy_context(context **ctx);
 
 // texture
-int32 create_texture(texture **tex, int32 width, int32 height, const bool mipmapped = true);
+int32 create_texture(texture **tex, const int32 width, const int32 height, const bool mipmapped = true);
 int32 create_texture(texture **tex, const std::string &filename, const bool mipmapped = true);
 void destroy_texture(texture **tex);
 int32 save_texture(texture *tex, const std::string &filename);
@@ -243,14 +209,11 @@ void unbind_framebuffer(framebuffer *fb);
 //
 // Texture Atlas
 //
-int32 create_atlas(textureatlas **atlas, array_buffer *target, const std::string &filename, int32 numx, int32 numy);
-int32 create_atlas(textureatlas **atlas, array_buffer *target, int32 width, int32 height, int32 numx, int32 numy);
+int32 create_atlas(textureatlas **atlas, const std::string &filename, int32 numx, int32 numy);
+int32 create_atlas(textureatlas **atlas, int32 width, int32 height, int32 numx, int32 numy);
 void destroy_atlas(textureatlas **atlas);
-void bind_atlas(textureatlas *atlas);
-void begin_atlas(textureatlas *atlas);
-void draw_atlas_tile(textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
-void draw_atlas_tile(textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
-void end_atlas(textureatlas *atlas);
+void draw_atlas_tile(array_buffer *target,textureatlas *atlas, float_t x1, float_t y1, float_t width, float_t height, int32 index, pixel32 colour = x11colours::white);
+void draw_atlas_tile(array_buffer *target,textureatlas *atlas, int32 x1, int32 y1, int32 width, int32 height, int32 index, pixel32 colour = x11colours::white);
 int32 putpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 colour);
 int32 getpixel(textureatlas *atlas, ivec2 p, int32 index, pixel32 &colour);
 int32 line(textureatlas *atlas, ivec2 p1, ivec2 p2, int32 index, pixel32 colour1, pixel32 colour2);
@@ -323,8 +286,8 @@ void draw_rectangle(array_buffer *target,
 					float32 width, float32 height,
 					pixel32 colour);
 void bind_texture(array_buffer *db, texture *tex);
-void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 colour = x11colours::white);
-void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 colour, const char* fmt, ...);
+void textout(array_buffer *target,textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 colour = x11colours::white);
+void gprintf(array_buffer *target,textureatlas *atlas, float32 x, float32 y, pixel32 colour, const char* fmt, ...);
 
 //
 // keyboard  -- experimental api atm

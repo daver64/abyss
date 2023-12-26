@@ -21,9 +21,9 @@ void ortho2d(int32 width, int32 height, bool flip, float32 near_z, float32 far_z
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
-void ortho2d(context *app_context,bool flip, float32 near_z,float32 far_z)
+void ortho2d(context *app_context, bool flip, float32 near_z, float32 far_z)
 {
-    ortho2d(app_context->width,app_context->height,flip,near_z,far_z);  
+    ortho2d(app_context->width, app_context->height, flip, near_z, far_z);
 }
 
 #define NUM_TIME_SAMPLES 8
@@ -55,7 +55,6 @@ const float64 get_frame_delta_t_ms()
     return result;
 }
 
-
 void clear_screen()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -75,15 +74,15 @@ void clear_screen(rgba clearcolour)
     glClearColor(clearcolour.r, clearcolour.g, clearcolour.b, clearcolour.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 textcolour)
+void textout(array_buffer *target, textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 textcolour)
 {
     int32 len = (int32)strlen(text);
     int32 endx = x + len * atlas->tile_width;
     const char *ptr = text;
     int32 xpos = x;
     int32 ypos = y;
-    bind_atlas(atlas);
-    begin_atlas(atlas);
+    bind_texture(target, atlas->tex);
+    begin_quads(target);
     for (int32 i = 0; i < len; i++)
     {
         int32 index = (int32)text[i];
@@ -99,19 +98,19 @@ void textout(textureatlas *atlas, const char *text, int32 x, int32 y, pixel32 te
         }
         else
         {
-            draw_atlas_tile(atlas, xpos, ypos, atlas->tile_width, atlas->tile_height, index, textcolour);
+            draw_atlas_tile(target, atlas, xpos, ypos, atlas->tile_width, atlas->tile_height, index, textcolour);
             xpos += atlas->tile_width;
         }
     }
-    end_atlas(atlas);
+    end_quads(target);
 }
 
-void gprintf(textureatlas *atlas, float32 x, float32 y, pixel32 textcolour, const char *fmt, ...)
+void gprintf(array_buffer *target, textureatlas *atlas, float32 x, float32 y, pixel32 textcolour, const char *fmt, ...)
 {
     char buf[4096];
     va_list args;
     va_start(args, fmt);
     vsnprintf(buf, 4096, fmt, args);
     va_end(args);
-    textout(atlas, buf, x, y, textcolour);
+    textout(target, atlas, buf, x, y, textcolour);
 }

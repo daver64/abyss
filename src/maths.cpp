@@ -14,6 +14,22 @@ const float32 TAUf = 2.0f * PIf;
 const float32 PIDIV2f = PIf / 2.0f;
 const float32 ROUNDING_ERRORf = std::numeric_limits<float32>::epsilon();
 
+int32 create_camera(camera **cam)
+{
+	(*cam)=(camera*)global_alloc(sizeof(camera));
+	(*cam)->position=vec3{0.0f,0.0f,5.0f};
+	(*cam)->rotation=quat{1.0f,0.0f,0.0f,0.0f};
+	(*cam)->fov=glm::radians(60.0f);
+	(*cam)->znear=0.1f;
+	(*cam)->zfar=100.0f;
+	return 0;
+}
+void destroy_camera(camera **cam)
+{
+	global_free(*cam);
+	(*cam)=nullptr;
+}
+
 vec3 camera::forward_vector() const
 {
     return glm::rotate(rotation, (vec3(0.0f, 0.0f, -1.0f)));

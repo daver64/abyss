@@ -102,3 +102,6 @@ public:
 	float32 znear{0.1f};
 	float32 zfar{100.0f};
 };
+
+void destroy_camera(camera **cam);
+int32 create_camera(camera **cam);

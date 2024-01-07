@@ -4,6 +4,7 @@ context *app_context{nullptr};
 array_buffer *db{nullptr};
 textureatlas *atlas{nullptr};
 
+
 int main(int argc, char *argv[])
 {
 	create_windowed_context(&app_context, "Abyss");

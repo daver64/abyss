@@ -1,0 +1,110 @@
+#pragma once
+
+#include <string>
+#include <vector>
+
+//
+// Abyss Game Engine - Core Data Structures
+
+bool init_platform(int width, int height, const std::string &title);
+bool shutdown_platform();
+bool update_platform();
+//
+// Game Data Structures
+enum class ItemType{
+    WEAPON,
+    ARMOUR,
+    POTION
+};
+
+enum class EntityType{
+    PLAYER,
+    MONSTER,
+    NPC
+};
+
+enum class FeatureType{
+    NONE,
+    TREE,
+    ROCK,
+    CHEST,
+    FLOWER,
+    SHRUB,
+    FOUNTAIN,
+    STATUE,
+    ALTAR,
+    BRIDGE,
+    SIGN,
+    LAMPPOST,
+    BENCH,
+    WELL,
+    POND,
+    CAVE,
+    RUINS,
+    TOWER,
+};
+
+enum class TileType{
+    FLOOR,
+    WALL,
+    WATER,
+    LAVA,
+    DOOROPEN,
+    DOORCLOSED,
+    EXIT,
+};
+
+enum class MaterialType{
+    WOOD,
+    STONE,
+    METAL,
+    GLASS
+};
+
+enum class LevelType{
+    DUNGEON,
+    CAVE,
+    OVERWORLD,
+    CASTLE,
+    TOWN
+};
+
+struct Tile {
+    TileType type;
+    FeatureType feature;
+
+};
+
+struct Item{
+    ItemType type;
+    std::string name;
+    int power;
+};
+
+struct Entity{
+    int x,y;
+    EntityType type;
+    std::string name;
+    int health;
+    std::vector<Item> inventory;
+};
+
+struct Level{
+    int width;
+    int height;
+    LevelType type;
+    std::vector<Tile> tiles;
+    std::vector<Entity> entities;
+};
+
+// tile api
+Tile &get_tile(Level &level, int x, int y);
+bool is_walkable(Tile &tile);
+
+// entity api
+bool create_player_entity(Level &level, int x, int y);
+Entity *get_entity_at(Level &level, int x, int y);
+
+// level api
+bool create_level(Level &level, int width, int height, LevelType type);
+

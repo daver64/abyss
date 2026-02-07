@@ -9,6 +9,7 @@
 bool init_platform(int width, int height, const std::string &title);
 bool shutdown_platform();
 bool update_platform();
+bool want_quit_platform();
 //
 // Game Data Structures
 enum class ItemType{

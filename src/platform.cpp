@@ -165,6 +165,10 @@ bool update_platform()
         {
             return false;
         }
+        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+        {
+            want_quit = true;
+        }
         handle_event(event);
     }
 

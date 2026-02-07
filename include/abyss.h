@@ -10,6 +10,7 @@ bool init_platform(int width, int height, const std::string &title);
 bool shutdown_platform();
 bool update_platform();
 bool want_quit_platform();
+
 //
 // Game Data Structures
 enum class ItemType{
@@ -97,10 +98,22 @@ struct Level{
     std::vector<Tile> tiles;
     std::vector<Entity> entities;
 };
+#include <string>
 
+struct TextureAtlas {
+    unsigned int gl_texture_id = 0;
+    int width = 0;
+    int height = 0;
+    std::string filepath;
+};
+extern TextureAtlas tile_atlas;
+bool load_texture_atlas(const std::string &filename, TextureAtlas &atlas);
+bool unload_texture_atlas(TextureAtlas &atlas);
 // tile api
 Tile &get_tile(Level &level, int x, int y);
 bool is_walkable(Tile &tile);
+void draw_atlas_tile(const TextureAtlas &atlas, int tile_x, int tile_y, int tile_width, int tile_height, int screen_x, int screen_y);
+void draw_tile(const Tile &tile, int screen_x, int screen_y);
 
 // entity api
 bool create_player_entity(Level &level, int x, int y);
@@ -108,4 +121,4 @@ Entity *get_entity_at(Level &level, int x, int y);
 
 // level api
 bool create_level(Level &level, int width, int height, LevelType type);
-
+bool draw_level(const Level &level);

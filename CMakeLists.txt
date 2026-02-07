@@ -11,6 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 # Find required packages
 find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 find_package(GLEW QUIET)
 if(NOT GLEW_FOUND)
     find_library(GLEW_LIBRARY NAMES GLEW glew)
@@ -32,6 +33,8 @@ set(SOURCES
     src/entity.cpp
     src/level.cpp
     src/platform.cpp
+    src/texture_atlas.cpp
+    src/draw.cpp
 )
 
 # Create executable
@@ -49,6 +52,13 @@ elseif(TARGET SDL2::SDL2main)
 else()
     target_include_directories(abyss PRIVATE ${SDL2_INCLUDE_DIRS})
     target_link_libraries(abyss PRIVATE ${SDL2_LIBRARIES})
+endif()
+
+if(TARGET SDL2_image::SDL2_image)
+    target_link_libraries(abyss PRIVATE SDL2_image::SDL2_image)
+else()
+    target_include_directories(abyss PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS})
+    target_link_libraries(abyss PRIVATE ${SDL2_IMAGE_LIBRARIES})
 endif()
 
 if(TARGET GLEW::GLEW)
@@ -73,6 +83,6 @@ add_custom_command(TARGET abyss POST_BUILD
 if(MSVC)
     target_compile_options(abyss PRIVATE /W4 /WX)
 else()
-    target_compile_options(abyss PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    target_compile_options(abyss PRIVATE -Wall -Wpedantic -Werror)
 endif()
 

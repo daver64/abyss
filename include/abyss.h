@@ -10,7 +10,8 @@ bool init_platform(int width, int height, const std::string &title);
 bool shutdown_platform();
 bool update_platform();
 bool want_quit_platform();
-
+void clear_screen();
+void swap_buffers();
 //
 // Game Data Structures
 enum class ItemType{
@@ -66,9 +67,7 @@ enum class MaterialType{
 enum class LevelType{
     DUNGEON,
     CAVE,
-    OVERWORLD,
-    CASTLE,
-    TOWN
+
 };
 
 struct Tile {
@@ -112,13 +111,12 @@ bool unload_texture_atlas(TextureAtlas &atlas);
 // tile api
 Tile &get_tile(Level &level, int x, int y);
 bool is_walkable(Tile &tile);
-void draw_atlas_tile(const TextureAtlas &atlas, int tile_x, int tile_y, int tile_width, int tile_height, int screen_x, int screen_y);
-void draw_tile(const Tile &tile, int screen_x, int screen_y);
+void draw_atlas_tile(const TextureAtlas &atlas, int tile_index, int tile_width, int tile_height, int screen_x, int screen_y, float z = 0.0f, float scale = 1.0f);
 
 // entity api
-bool create_player_entity(Level &level, int x, int y);
+bool create_player_entity(Level &level);
 Entity *get_entity_at(Level &level, int x, int y);
 
 // level api
 bool create_level(Level &level, int width, int height, LevelType type);
-bool draw_level(const Level &level);
+bool draw_level(const Level &level, float scale = 1.0f);

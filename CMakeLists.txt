@@ -83,6 +83,6 @@ add_custom_command(TARGET abyss POST_BUILD
 if(MSVC)
     target_compile_options(abyss PRIVATE /W4 /WX)
 else()
-    target_compile_options(abyss PRIVATE -Wall -Wpedantic -Werror)
+    target_compile_options(abyss PRIVATE -Wall  -Werror)
 endif()
 

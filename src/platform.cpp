@@ -91,7 +91,7 @@ static bool init_sdl_gl(int width, int height, const std::string &title)
     SDL_GL_GetDrawableSize(g_window, &drawable_width, &drawable_height);
     glViewport(0, 0, drawable_width, drawable_height);
     glClearColor(0.05f, 0.05f, 0.08f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
 
     return true;
 }
@@ -163,6 +163,7 @@ bool update_platform()
     {
         if (event.type == SDL_QUIT)
         {
+            want_quit = true;
             return false;
         }
         if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
@@ -172,7 +173,14 @@ bool update_platform()
         handle_event(event);
     }
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    SDL_GL_SwapWindow(g_window);
+
     return true;
+}
+void clear_screen()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+void swap_buffers()
+{
+    SDL_GL_SwapWindow(g_window);
 }

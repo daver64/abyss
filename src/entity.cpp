@@ -32,3 +32,43 @@ bool create_player_entity(Level &level)
     }
     return false;
 }
+bool move_entity(Entity &entity, Level &level, int new_x, int new_y)
+{
+    if (can_move_to(entity, level, new_x, new_y)) {
+        entity.x = new_x;
+        entity.y = new_y;
+        return true;
+    }
+    return false;
+}
+bool can_move_to(Entity &entity, Level &level, int new_x, int new_y)
+{
+    // Check bounds
+    if (new_x < 0 || new_x >= level.width || new_y < 0 || new_y >= level.height) {
+        return false;
+    }
+    
+    // Check tile walkability
+    Tile &tile = get_tile(level, new_x, new_y);
+    if (!is_walkable(tile)) {
+        return false;
+    }
+    
+    // Check for blocking entities
+    for (const auto &other : level.entities) {
+        if (other.x == new_x && other.y == new_y && other.type != EntityType::PLAYER) {
+            return false; // Can't move onto another entity (except player)
+        }
+    }
+    
+    return true;
+}
+
+Entity *get_player_entity()
+{
+    if (g_current_level && !g_current_level->entities.empty()) {
+        // Assuming player is always the first entity
+        return &g_current_level->entities[0];
+    }
+    return nullptr;
+}

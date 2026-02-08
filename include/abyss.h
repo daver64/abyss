@@ -118,10 +118,13 @@ void draw_atlas_tile(const TextureAtlas &atlas, int tile_index, int tile_width, 
 // entity api
 bool create_player_entity(Level &level);
 Entity *get_entity_at(Level &level, int x, int y);
-
+bool move_entity(Entity &entity, Level &level, int new_x, int new_y);
+bool can_move_to(Entity &entity, Level &level, int new_x, int new_y);
 // level api
+extern Level *g_current_level;
 bool create_level(Level &level, int width, int height, LevelType type);
 bool draw_level(const Level &level, float scale = 1.0f);
+Entity *get_player_entity();
 
 // Font rendering
 struct RGBA {

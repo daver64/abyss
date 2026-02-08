@@ -1,6 +1,6 @@
 #include "../include/abyss.h"
 
-
+Level *g_current_level = nullptr;
 
 int main()
 {
@@ -22,6 +22,7 @@ int main()
     Level current_level;
     create_level(current_level, 20, 10, LevelType::DUNGEON);
     create_player_entity(current_level);
+    g_current_level = &current_level;
 
     while (!want_quit_platform())
     {

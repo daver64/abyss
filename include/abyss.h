@@ -122,3 +122,12 @@ Entity *get_entity_at(Level &level, int x, int y);
 // level api
 bool create_level(Level &level, int width, int height, LevelType type);
 bool draw_level(const Level &level, float scale = 1.0f);
+
+// Font rendering
+struct RGBA {
+    unsigned char r, g, b, a;
+};
+
+bool load_font(const std::string &font_path, int font_size);
+bool unload_font();
+int gprintf(int x, int y, RGBA colour, const char *fmt, ...);

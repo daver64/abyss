@@ -5,6 +5,9 @@
 
 #include <array>
 
+extern int g_window_width;
+extern int g_window_height;
+
 bool want_quit = false;
 
 void quit_platform()
@@ -93,6 +96,11 @@ static bool init_sdl_gl(int width, int height, const std::string &title)
     int drawable_width = 0;
     int drawable_height = 0;
     SDL_GL_GetDrawableSize(g_window, &drawable_width, &drawable_height);
+    
+    // Update global window dimensions for rendering code
+    g_window_width = drawable_width;
+    g_window_height = drawable_height;
+    
     glViewport(0, 0, drawable_width, drawable_height);
     glClearColor(0.05f, 0.05f, 0.08f, 1.0f);
     glDisable(GL_DEPTH_TEST);

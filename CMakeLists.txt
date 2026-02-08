@@ -36,6 +36,7 @@ set(SOURCES
     src/texture_atlas.cpp
     src/draw.cpp
     src/input.cpp
+    src/font.cpp
 )
 
 # Create executable
@@ -60,6 +61,14 @@ if(TARGET SDL2_image::SDL2_image)
 else()
     target_include_directories(abyss PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS})
     target_link_libraries(abyss PRIVATE ${SDL2_IMAGE_LIBRARIES})
+endif()
+
+find_package(SDL2_ttf REQUIRED)
+if(TARGET SDL2_ttf::SDL2_ttf)
+    target_link_libraries(abyss PRIVATE SDL2_ttf::SDL2_ttf)
+else()
+    target_include_directories(abyss PRIVATE ${SDL2_TTF_INCLUDE_DIRS})
+    target_link_libraries(abyss PRIVATE ${SDL2_TTF_LIBRARIES})
 endif()
 
 if(TARGET GLEW::GLEW)

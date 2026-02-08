@@ -8,15 +8,23 @@
 
 TextureAtlas tile_atlas;
 
+// Window dimensions (can be accessed from other translation units)
+int g_window_width = 800;
+int g_window_height = 600;
+
 namespace {
     // Shader program for rendering textured quads
     GLuint g_shader_program = 0;
     GLuint g_quad_vao = 0;
     GLuint g_quad_vbo = 0;
     
-    // Window dimensions (updated externally)
-    int g_window_width = 800;
-    int g_window_height = 600;
+    // Batch rendering state
+    struct {
+        GLint proj_loc = -1;
+        GLint model_loc = -1;
+        GLint tex_loc = -1;
+        bool active = false;
+    } g_batch;
     
     const char *vs_source = R"(
         #version 410 core
@@ -57,11 +65,11 @@ namespace {
     {
         // Vertices for a unit quad (0,0 to 1,1)
         float vertices[] = {
-            // positions      // texture coords
-            0.0f, 0.0f,      0.0f, 1.0f,
-            1.0f, 0.0f,      1.0f, 1.0f,
-            1.0f, 1.0f,      1.0f, 0.0f,
-            0.0f, 1.0f,      0.0f, 0.0f
+            // positions      // texture coords (flipped for SDL texture origin at top-left)
+            0.0f, 0.0f,      0.0f, 0.0f,
+            1.0f, 0.0f,      1.0f, 0.0f,
+            1.0f, 1.0f,      1.0f, 1.0f,
+            0.0f, 1.0f,      0.0f, 1.0f
         };
         
         unsigned int indices[] = {
@@ -159,6 +167,89 @@ namespace {
             initialized = true;
         }
     }
+
+    void begin_batch_draw(const TextureAtlas &atlas)
+    {
+        if (g_batch.active) return;
+        
+        // Set up projection matrix (2D orthographic) - computed once
+        glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(g_window_width), 
+                                          static_cast<float>(g_window_height), 0.0f, 
+                                          -1.0f, 1.0f);
+        
+        // Reset color to white to avoid texture tinting
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        
+        // Use shader program once for all tiles in batch
+        glUseProgram(g_shader_program);
+        
+        // Cache uniform locations
+        g_batch.proj_loc = glGetUniformLocation(g_shader_program, "projection");
+        g_batch.model_loc = glGetUniformLocation(g_shader_program, "model");
+        g_batch.tex_loc = glGetUniformLocation(g_shader_program, "tex_sampler");
+        
+        // Set projection matrix once (doesn't change)
+        glUniformMatrix4fv(g_batch.proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
+        
+        // Bind texture once for all tiles
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, atlas.gl_texture_id);
+        glUniform1i(g_batch.tex_loc, 0);
+        
+        // Bind VAO once
+        glBindVertexArray(g_quad_vao);
+        
+        g_batch.active = true;
+    }
+
+    void batch_draw_tile(const TextureAtlas &atlas, int tile_index, int tile_width, int tile_height, int screen_x, int screen_y, float z, float scale)
+    {
+        if (!g_batch.active) {
+            return;
+        }
+        
+        // Calculate texture coordinates based on tile_index
+        int tiles_per_row = atlas.width / tile_width;
+        int tile_row = tile_index / tiles_per_row;
+        int tile_col = tile_index % tiles_per_row;
+        
+        float tex_x = (tile_col * tile_width) / static_cast<float>(atlas.width);
+        float tex_y = (tile_row * tile_height) / static_cast<float>(atlas.height);
+        float tex_width = tile_width / static_cast<float>(atlas.width);
+        float tex_height = tile_height / static_cast<float>(atlas.height);
+        
+        // Set up model matrix (position and scale)
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(screen_x, screen_y, z));
+        model = glm::scale(model, glm::vec3(tile_width * scale, tile_height * scale, 1.0f));
+        
+        // Update model matrix uniform
+        glUniformMatrix4fv(g_batch.model_loc, 1, GL_FALSE, glm::value_ptr(model));
+        
+        // Update texture coordinates in the VBO (flipped for SDL textures)
+        float quad_vertices[] = {
+            // positions      // texture coords
+            0.0f, 0.0f,      tex_x, tex_y,
+            1.0f, 0.0f,      tex_x + tex_width, tex_y,
+            1.0f, 1.0f,      tex_x + tex_width, tex_y + tex_height,
+            0.0f, 1.0f,      tex_x, tex_y + tex_height
+        };
+        
+        glBindBuffer(GL_COPY_WRITE_BUFFER, g_quad_vbo);
+        glBufferSubData(GL_COPY_WRITE_BUFFER, 0, sizeof(quad_vertices), quad_vertices);
+        
+        // Draw this tile
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    }
+
+    void end_batch_draw()
+    {
+        if (!g_batch.active) return;
+        
+        glBindVertexArray(0);
+        glUseProgram(0);
+        g_batch.active = false;
+    }
 }
 
 void draw_atlas_tile(const TextureAtlas &atlas, int tile_index, int tile_width, int tile_height, int screen_x, int screen_y, float z, float scale)
@@ -211,13 +302,13 @@ void draw_atlas_tile(const TextureAtlas &atlas, int tile_index, int tile_width, 
     glBindVertexArray(g_quad_vao);
     
     // Update texture coordinates in the VBO
-    // We need to modify the quad vertices to use the correct texture coordinates
+    // We need to modify the quad vertices to use the correct texture coordinates (flipped for SDL)
     float quad_vertices[] = {
         // positions      // texture coords
-        0.0f, 0.0f,      tex_x, tex_y + tex_height,
-        1.0f, 0.0f,      tex_x + tex_width, tex_y + tex_height,
-        1.0f, 1.0f,      tex_x + tex_width, tex_y,
-        0.0f, 1.0f,      tex_x, tex_y
+        0.0f, 0.0f,      tex_x, tex_y,
+        1.0f, 0.0f,      tex_x + tex_width, tex_y,
+        1.0f, 1.0f,      tex_x + tex_width, tex_y + tex_height,
+        0.0f, 1.0f,      tex_x, tex_y + tex_height
     };
     
     glBindBuffer(GL_COPY_WRITE_BUFFER, g_quad_vbo);
@@ -234,6 +325,14 @@ bool draw_level(const Level &level, float scale)
 {
     bool success = true;
 
+    setup_rendering_state();
+    
+    if (g_shader_program == 0 || g_quad_vao == 0 || tile_atlas.gl_texture_id == 0) {
+        return false;
+    }
+    
+    begin_batch_draw(tile_atlas);
+
     // Draw tiles
     for(int y = 0; y < level.height; ++y)
     {
@@ -241,7 +340,7 @@ bool draw_level(const Level &level, float scale)
         {
             Tile &tile = get_tile(const_cast<Level&>(level), x, y);
             int tile_index = static_cast<int>(tile.type) * 8 + static_cast<int>(tile.feature);
-            draw_atlas_tile(tile_atlas, tile_index, 16, 16, static_cast<int>(x * 16 * scale), static_cast<int>(y * 16 * scale), 0.0f, scale);
+            batch_draw_tile(tile_atlas, tile_index, 16, 16, static_cast<int>(x * 16 * scale), static_cast<int>(y * 16 * scale), 0.0f, scale);
         }
     }
 
@@ -250,9 +349,10 @@ bool draw_level(const Level &level, float scale)
     {
         if(entity.type == EntityType::PLAYER)
         {
-            draw_atlas_tile(tile_atlas, 39, 16, 16, static_cast<int>(entity.x * 16 * scale), static_cast<int>(entity.y * 16 * scale), -0.5f, scale);
+            batch_draw_tile(tile_atlas, 39, 16, 16, static_cast<int>(entity.x * 16 * scale), static_cast<int>(entity.y * 16 * scale), -0.5f, scale);
         }
     }
 
+    end_batch_draw();
     return success;
 }

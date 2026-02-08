@@ -1,4 +1,11 @@
 
 build/
-assets/
+assets/music/
+assets/sfx/
+assets/shaders/
+assets/textures/blob/
+assets/textures/demon/
+assets/textures/gunblin/
+assets/textures/hobo/
+assets/textures/*.zip
 abyss

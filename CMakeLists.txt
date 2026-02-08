@@ -35,6 +35,7 @@ set(SOURCES
     src/platform.cpp
     src/texture_atlas.cpp
     src/draw.cpp
+    src/input.cpp
 )
 
 # Create executable

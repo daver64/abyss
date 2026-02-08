@@ -7,6 +7,10 @@
 
 bool want_quit = false;
 
+void quit_platform()
+{
+    want_quit = true;
+}
 bool want_quit_platform()
 {
     return want_quit;
@@ -161,15 +165,24 @@ bool update_platform()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
-        if (event.type == SDL_QUIT)
+        switch(event.type)
         {
-            want_quit = true;
-            return false;
+            case SDL_QUIT:
+            {
+                want_quit = true;
+                return false;
+            } break;
+            case SDL_KEYDOWN:
+            {
+                return keydown_callback(event.key.keysym.scancode);
+                //if(event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+                //{
+                //    want_quit = true;
+                // /   return false;
+                //}    
+            } break;
         }
-        if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
-        {
-            want_quit = true;
-        }
+
         handle_event(event);
     }
 

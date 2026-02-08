@@ -51,8 +51,8 @@ bool load_texture_atlas(const std::string &filename, TextureAtlas &atlas) {
 
     SDL_FreeSurface(surface);
 
-    std::printf("Loaded texture atlas '%s': %dx%d (GL texture ID: %u)\n",
-                filename.c_str(), atlas.width, atlas.height, atlas.gl_texture_id);
+    //std::printf("Loaded texture atlas '%s': %dx%d (GL texture ID: %u)\n",
+    //            filename.c_str(), atlas.width, atlas.height, atlas.gl_texture_id);
 
     return true;
 }

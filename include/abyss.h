@@ -89,6 +89,7 @@ struct Entity{
     EntityType type;
     std::string name;
     int health;
+    int tile_index = 0;
     std::vector<Item> inventory;
 };
 
@@ -117,6 +118,7 @@ void draw_atlas_tile(const TextureAtlas &atlas, int tile_index, int tile_width, 
 
 // entity api
 bool create_player_entity(Level &level);
+bool create_enemy_entities(Level &level);
 Entity *get_entity_at(Level &level, int x, int y);
 bool move_entity(Entity &entity, Level &level, int new_x, int new_y);
 bool can_move_to(Entity &entity, Level &level, int new_x, int new_y);

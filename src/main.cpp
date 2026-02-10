@@ -22,6 +22,7 @@ int main()
     Level current_level;
     create_level(current_level, 20, 10, LevelType::DUNGEON);
     create_player_entity(current_level);
+    create_enemy_entities(current_level);
     g_current_level = &current_level;
 
     while (!want_quit_platform())

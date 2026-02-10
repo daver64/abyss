@@ -347,9 +347,9 @@ bool draw_level(const Level &level, float scale)
     // Draw entities
     for(const auto &entity : level.entities)
     {
-        if(entity.type == EntityType::PLAYER)
+        if(entity.type == EntityType::PLAYER || entity.type == EntityType::MONSTER)
         {
-            batch_draw_tile(tile_atlas, 39, 16, 16, static_cast<int>(entity.x * 16 * scale), static_cast<int>(entity.y * 16 * scale), -0.5f, scale);
+            batch_draw_tile(tile_atlas, entity.tile_index, 16, 16, static_cast<int>(entity.x * 16 * scale), static_cast<int>(entity.y * 16 * scale), -0.5f, scale);
         }
     }
 
